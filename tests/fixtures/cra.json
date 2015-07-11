@@ -1,0 +1,226 @@
+{
+    "dimensions": {
+        "cap_or_cur": {
+            "attributes": {
+                "cap_or_cur": {
+                    "column": "cap_or_cur",
+                    "type": "string"
+                }
+            },
+            "description": "Central government, local government or public corporation",
+            "label": "CG, LG or PC"
+        },
+        "cofog1": {
+            "attributes": {
+                "change_date": {
+                    "column": "cofog1_change_date",
+                    "default_value": "",
+                    "type": "string"
+                },
+                "description": {
+                    "column": "cofog1_description",
+                    "default_value": "",
+                    "type": "string"
+                },
+                "label": {
+                    "column": "cofog1_label",
+                    "default_value": "(Undefined)",
+                    "type": "string"
+                },
+                "level": {
+                    "column": "cofog1_level",
+                    "default_value": "",
+                    "type": "string"
+                },
+                "name": {
+                    "column": "cofog1_name",
+                    "default_value": "XX",
+                    "type": "string"
+                }
+            },
+            "description": "Classification Of Function Of Government, level 1",
+            "facet": true,
+            "label": "COFOG level 1",
+            "taxonomy": "cofog"
+        },
+        "cofog2": {
+            "attributes": {
+                "change_date": {
+                    "column": "cofog2_change_date",
+                    "default_value": "",
+                    "type": "string"
+                },
+                "description": {
+                    "column": "cofog2_description",
+                    "default_value": "",
+                    "type": "string"
+                },
+                "label": {
+                    "column": "cofog2_label",
+                    "default_value": "(Undefined)",
+                    "type": "string"
+                },
+                "level": {
+                    "column": "cofog2_level",
+                    "default_value": "",
+                    "type": "string"
+                },
+                "name": {
+                    "column": "cofog2_name",
+                    "default_value": "XX.X",
+                    "type": "string"
+                }
+            },
+            "description": "Classification Of Function Of Government, level 2",
+            "label": "COFOG level 2",
+            "taxonomy": "cofog"
+        },
+        "cofog3": {
+            "attributes": {
+                "change_date": {
+                    "column": "cofog3_change_date",
+                    "default_value": "",
+                    "type": "string"
+                },
+                "description": {
+                    "column": "cofog3_description",
+                    "default_value": "",
+                    "type": "string"
+                },
+                "label": {
+                    "column": "cofog3_label",
+                    "default_value": "(Undefined)",
+                    "type": "string"
+                },
+                "level": {
+                    "column": "cofog3_level",
+                    "default_value": "",
+                    "type": "string"
+                },
+                "name": {
+                    "column": "cofog3_name",
+                    "default_value": "XX.X.X",
+                    "type": "string"
+                }
+            },
+            "description": "Classification Of Function Of Government, level 3",
+            "label": "COFOG level 3",
+            "taxonomy": "cofog",
+            "type": "classifier"
+        },
+        "currency": {
+            "attributes": {
+                "currency": {
+                    "column": "currency",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "label": "Currency"
+        },
+        "from": {
+            "attributes": {
+                "description": {
+                    "column": "from_description",
+                    "default_value": "",
+                    "type": "string"
+                },
+                "label": {
+                    "column": "from_label",
+                    "type": "string"
+                },
+                "name": {
+                    "column": "from_name",
+                    "type": "string"
+                }
+            },
+            "description": "The entity that the money was paid from.",
+            "label": "Paid by"
+        },
+        "name": {
+            "attributes": {
+                "name": {
+                    "column": "name",
+                    "type": "string"
+                }
+            },
+            "label": "Name"
+        },
+        "pog": {
+            "attributes": {
+                "label": {
+                    "column": "pog_label",
+                    "type": "string"
+                },
+                "name": {
+                    "column": "pog_name",
+                    "type": "string"
+                }
+            },
+            "label": "Programme Object Group",
+            "taxonomy": "pog"
+        },
+        "population2006": {
+            "attributes": {
+                "population2006": {
+                    "column": "population2006",
+                    "type": "number"
+                }
+            },
+            "label": "Population in 2006"
+        },
+        "region": {
+            "attributes": {
+                "region": {
+                    "column": "region",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "facet": true,
+            "label": "Region"
+        },
+        "time": {
+          "attributes": {
+                "year": {
+                    "column": "time_from_year",
+                    "type": "string"
+                }
+            },
+            "description": "The accounting period in which the spending happened",
+            "label": "Tax year"
+        },
+        "to": {
+            "attributes": {
+                "description": {
+                    "column": "to_description",
+                    "type": "string"
+                },
+                "label": {
+                    "column": "to_label",
+                    "type": "string"
+                },
+                "name": {
+                    "column": "to_name",
+                    "type": "string"
+                }
+            },
+            "description": "The entity that the money was paid to",
+            "label": "Paid to"
+        }
+    },
+    "measures": {
+        "amount": {
+            "column": "amount",
+            "description": "",
+            "label": "Amount",
+            "type": "number"
+        },
+        "total": {
+            "column": "amount",
+            "description": "",
+            "label": "Total amount",
+            "type": "number"
+        }
+    }
+}

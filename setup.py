@@ -27,11 +27,15 @@ setup(
         'PyYAML >= 3.10',
         'six >= 1.7.3',
         'flask >= 0.10.1',
-        'jsonschema >= 2.5.1'
+        'jsonschema >= 2.5.1',
+        'sqlalchemy >= 1.0',
+        'psycopg2 >= 2.6'
     ],
     tests_require=[
         'nose >= 1.3.7',
-        'Flask-Testing >= 0.4.2'
+        'Flask-Testing >= 0.4.2',
+        'python-dateutil-2.4.2',
+        'unicodecsv-0.13.0'
     ],
     test_suite='test',
     entry_points={}
