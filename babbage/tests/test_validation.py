@@ -26,3 +26,9 @@ class ValidationTestCase(TestCase):
         model = self.simple_model.copy()
         model['dimensions']['goo fdj.'] = {'label': 'bar'}
         validate_model(model)
+
+    @raises(ValidationError)
+    def test_invalid_measure_name(self):
+        model = self.simple_model.copy()
+        model['measures']['goo fdj.'] = {'label': 'bar'}
+        validate_model(model)

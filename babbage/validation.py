@@ -8,6 +8,7 @@ schema_path = os.path.join(os.path.dirname(__file__), 'schema')
 def load_validator(name):
     with open(os.path.join(schema_path, name)) as fh:
         schema = json.load(fh)
+    Draft4Validator.check_schema(schema)
     return Draft4Validator(schema)
 
 
