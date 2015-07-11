@@ -32,3 +32,15 @@ class ValidationTestCase(TestCase):
         model = self.simple_model.copy()
         model['measures']['goo fdj.'] = {'label': 'bar'}
         validate_model(model)
+
+    @raises(ValidationError)
+    def test_no_measure(self):
+        model = self.simple_model.copy()
+        model['measures'] = {}
+        validate_model(model)
+
+    @raises(ValidationError)
+    def test_no_measure_label(self):
+        model = self.simple_model.copy()
+        model['measures']['amount'] = {}
+        validate_model(model)
