@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='babbage',
-    version='0.0.1',
+    version='0.1.0',
     description="A light-weight analytical engine for OLAP processing",
     long_description="",
     classifiers=[
