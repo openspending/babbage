@@ -10,7 +10,8 @@ before_install:
     - source ./pyenv/bin/activate
 install:
     - pip install -e .
-    - pip install psycopg2 nose flask-testing coverage coveralls
+    - pip install psycopg2 nose flask-testing coverage
+    - pip install python-dateutil coveralls unicodecsv
 before_script:
     - psql -c 'create database babbage;' -U postgres
     - nosetests --version
