@@ -24,13 +24,15 @@ setup(
     zip_safe=False,
     install_requires=[
         'normality >= 0.2.2',
-        "PyYAML >= 3.10",
-        "six >= 1.7.3"
+        'PyYAML >= 3.10',
+        'six >= 1.7.3',
+        'flask >= 0.10.1',
+        'jsonschema >= 2.5.1'
     ],
-    tests_require=[],
+    tests_require=[
+        'nose >= 1.3.7',
+        'Flask-Testing >= 0.4.2'
+    ],
     test_suite='test',
-    entry_points={
-        'console_scripts': [
-        ]
-    }
+    entry_points={}
 )
