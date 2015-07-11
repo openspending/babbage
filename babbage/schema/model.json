@@ -17,6 +17,12 @@
             "minLength": 2,
             "maxLength": 20
         },
+        "description": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 1000,
+            "default": ""
+        },
         "dimensions": {
             "type": "object",
             "patternProperties": {
@@ -28,10 +34,37 @@
         },
         "dimension": {
             "type": "object",
+            "format": "attribute_exists",
             "properties": {
-                "label": {
-                    "$ref": "#/definitions/label"
+                "label": {"$ref": "#/definitions/label"},
+                "description": {"$ref": "#/definitions/description"},
+                "label_attribute": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]$"
+                },
+                "key_attribute": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]$"
+                },
+                "attributes": {"$ref": "#/definitions/attributes"}
+            },
+            "required": ["label", "attributes", "key_attribute"]
+        },
+        "attributes": {
+            "type": "object",
+            "minProperties": 1,
+            "patternProperties": {
+                "^[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]$": {
+                    "$ref": "#/definitions/attribute"
                 }
+            },
+            "additionalProperties": false
+        },
+        "attribute": {
+            "type": "object",
+            "properties": {
+                "label": {"$ref": "#/definitions/label"},
+                "description": {"$ref": "#/definitions/description"}
             },
             "required": ["label"]
         },
@@ -48,9 +81,8 @@
         "measure": {
             "type": "object",
             "properties": {
-                "label": {
-                    "$ref": "#/definitions/label"
-                }
+                "label": {"$ref": "#/definitions/label"},
+                "description": {"$ref": "#/definitions/description"}
             },
             "required": ["label"]
         }

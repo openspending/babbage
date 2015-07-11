@@ -44,3 +44,21 @@ class ValidationTestCase(TestCase):
         model = self.simple_model.copy()
         model['measures']['amount'] = {}
         validate_model(model)
+
+    @raises(ValidationError)
+    def test_dimension_without_attributes(self):
+        model = self.simple_model.copy()
+        model['dimensions']['foo']['attributes'] = {}
+        validate_model(model)
+
+    @raises(ValidationError)
+    def test_dimension_without_key(self):
+        model = self.simple_model.copy()
+        del model['dimensions']['foo']['key_attribute']
+        validate_model(model)
+
+    @raises(ValidationError)
+    def test_dimension_invalid_key(self):
+        model = self.simple_model.copy()
+        model['dimensions']['foo']['key_attribute'] = 'lala'
+        validate_model(model)

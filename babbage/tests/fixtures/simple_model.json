@@ -2,10 +2,18 @@
     "name": "demo",
     "dimensions": {
         "foo": {
-            "label": "Foo"
+            "label": "Foo",
+            "key_attribute": "key",
+            "attributes": {
+                "key": {"label": "Key"}
+            }
         },
         "bar": {
-            "label": "Bar"
+            "label": "Bar",
+            "key_attribute": "key",
+            "attributes": {
+                "key": {"label": "Key"}
+            }
         }
     },
     "measures": {
