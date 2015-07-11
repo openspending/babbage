@@ -1,5 +1,16 @@
+import os
+import json
+
 from flask import Flask
 from flask.ext.testing import TestCase as FlaskTestCase
+
+FIXTURE_PATH = os.path.join(os.path.dirname(__file__), 'fixtures')
+
+
+def load_json_fixture(name):
+    path = os.path.join(FIXTURE_PATH, name)
+    with open(path, 'rb') as fh:
+        return json.load(fh)
 
 
 class TestCase(FlaskTestCase):
