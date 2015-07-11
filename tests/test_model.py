@@ -1,6 +1,4 @@
-from nose.tools import raises
-
-from babbage.tests.util import TestCase, load_json_fixture
+from .util import TestCase, load_json_fixture
 from babbage.model import Model
 
 
@@ -19,6 +17,14 @@ class ModelTestCase(TestCase):
         assert self.simple_model['foo'].name == 'foo'
         assert self.simple_model['foo.key'].name == 'key'
         assert self.simple_model['amount'].name == 'amount'
+        assert 'amount' in self.simple_model
+        assert 'yabba' not in self.simple_model
+        assert 'foo.key' in self.simple_model
+
+    def test_repr(self):
+        assert 'amount' in repr(self.simple_model['amount'])
+        assert 'foo.key' in repr(self.simple_model['foo.key'])
+        assert 'foo' in repr(self.simple_model['foo'])
 
     def test_to_dict(self):
         data = self.simple_model.to_dict()

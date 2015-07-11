@@ -1,7 +1,7 @@
 from jsonschema import ValidationError
 from nose.tools import raises
 
-from babbage.tests.util import TestCase, load_json_fixture
+from .util import TestCase, load_json_fixture
 
 from babbage.validation import validate_model
 
@@ -61,4 +61,10 @@ class ValidationTestCase(TestCase):
     def test_dimension_invalid_key(self):
         model = self.simple_model.copy()
         model['dimensions']['foo']['key_attribute'] = 'lala'
+        validate_model(model)
+
+    @raises(ValidationError)
+    def test_dimension_invalid_label(self):
+        model = self.simple_model.copy()
+        model['dimensions']['foo']['label_attribute'] = 'lala'
         validate_model(model)
