@@ -6,7 +6,7 @@ class ModelTestCase(TestCase):
 
     def setUp(self):
         super(ModelTestCase, self).setUp()
-        self.simple_model_data = load_json_fixture('simple_model.json')
+        self.simple_model_data = load_json_fixture('models/simple_model.json')
         self.simple_model = Model(self.simple_model_data)
 
     def test_model_concepts(self):

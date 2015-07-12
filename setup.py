@@ -1,8 +1,13 @@
 from setuptools import setup, find_packages
 
+try:
+    from babbage import __version__
+except ImportError:
+    __version__ = 'dev'
+
 setup(
     name='babbage',
-    version='0.1.0',
+    version=__version__,
     description="A light-weight analytical engine for OLAP processing",
     long_description="",
     classifiers=[

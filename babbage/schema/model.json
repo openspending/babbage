@@ -4,10 +4,8 @@
     "type": "object",
 
     "properties": {
-        "name": {"type": "string"},
         "measures": {"$ref": "#/definitions/measures"},
         "dimensions": {"$ref": "#/definitions/dimensions"},
-        "mappings": {"type": "object"},
         "joins": {"type": "array"}
     },
     "additionalProperties": false,

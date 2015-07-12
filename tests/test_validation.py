@@ -10,7 +10,7 @@ class ValidationTestCase(TestCase):
 
     def setUp(self):
         super(ValidationTestCase, self).setUp()
-        self.simple_model = load_json_fixture('simple_model.json')
+        self.simple_model = load_json_fixture('models/simple_model.json')
 
     def test_simple_model(self):
         validate_model(self.simple_model)
