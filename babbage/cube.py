@@ -31,12 +31,30 @@ class Cube(object):
         concept = self.model[ref]
         if isinstance(concept, Dimension):
             concept = concept.key_attribute
-        column_name = concept.column_name
+        return self._physical_column(concept.column_name)
+
+    def _physical_column(self, column_name):
+        """ Return the SQLAlchemy Column object matching a given, possibly
+        qualified, column name (i.e.: 'table.column'). If no table is named,
+        the fact table is assumed. """
         table_name = self.model.fact_table_name
         if '.' in column_name:
             table_name, column_name = column_name.split('.', 1)
         table = self._load_table(table_name)
+        if column_name not in table.columns:
+            raise BindingException('Column does not exist: %r' % column_name,
+                                   table=table_name, column=column_name)
         return table.columns[column_name]
+
+    # mock API (to be implemented):
+    def aggregate(self):
+        pass
+
+    def members(self, ref):
+        pass
+
+    def facts(self):
+        pass
 
     def __repr__(self):
         return '<Cube(%r)' % self.name
