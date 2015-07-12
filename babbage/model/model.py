@@ -16,6 +16,10 @@ class Model(object):
         self.spec = spec
 
     @property
+    def fact_table(self):
+        return self.spec.get('fact_table')
+
+    @property
     def dimensions(self):
         for name, data in self.spec.get('dimensions', {}).items():
             yield Dimension(self, name, data)
@@ -27,6 +31,8 @@ class Model(object):
 
     @property
     def concepts(self):
+        """ Return all existing concepts, i.e. dimensions, measures and
+        attributes within the model. """
         for measure in self.measures:
             yield measure
         for dimension in self.dimensions:
@@ -36,7 +42,9 @@ class Model(object):
 
     @property
     def exists(self):
-        return len(self.axes) > 0
+        """ Check if the model satisfies the basic conditions for being
+        queried, i.e. at least one measure. """
+        return len(list(self.measures)) > 0
 
     def __getitem__(self, ref):
         """ Access a ref (dimension, attribute or measure) by ref. """
@@ -46,6 +54,7 @@ class Model(object):
         raise KeyError()
 
     def __contains__(self, name):
+        """ Check if the given ref exists within the model. """
         try:
             self[name]
             return True

@@ -16,6 +16,18 @@ class ValidationTestCase(TestCase):
         validate_model(self.simple_model)
 
     @raises(ValidationError)
+    def test_invalid_fact_table(self):
+        model = self.simple_model.copy()
+        model['fact_table'] = 'b....'
+        validate_model(model)
+
+    @raises(ValidationError)
+    def test_no_fact_table(self):
+        model = self.simple_model.copy()
+        del model['fact_table']
+        validate_model(model)
+
+    @raises(ValidationError)
     def test_invalid_base_key(self):
         model = self.simple_model.copy()
         model['foo'] = 'bar'

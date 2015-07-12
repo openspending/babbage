@@ -1,23 +1,26 @@
 {
+    "fact_table": "simple",
     "dimensions": {
         "foo": {
             "label": "Foo",
             "key_attribute": "key",
+            "label_attribute": "key",
             "attributes": {
-                "key": {"label": "Key"}
+                "key": {"label": "Key", "column": "foo_key"}
             }
         },
         "bar": {
             "label": "Bar",
             "key_attribute": "key",
             "attributes": {
-                "key": {"label": "Key"}
+                "key": {"label": "Key", "column": "bar_key"}
             }
         }
     },
     "measures": {
         "amount": {
-            "label": "Amount in USD"
+            "label": "Amount in USD",
+            "column": "amount"
         }
     }
 }
