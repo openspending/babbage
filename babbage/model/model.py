@@ -1,3 +1,4 @@
+from babbage.validation import validate_model
 from babbage.model.dimension import Dimension
 from babbage.model.measure import Measure
 
@@ -13,10 +14,11 @@ class Model(object):
         This is called upon initialization and deserialization of
         the dataset from the SQLAlchemy store.
         """
+        validate_model(spec)
         self.spec = spec
 
     @property
-    def fact_table(self):
+    def fact_table_name(self):
         return self.spec.get('fact_table')
 
     @property
