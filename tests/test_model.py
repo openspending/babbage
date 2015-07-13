@@ -24,6 +24,7 @@ class ModelTestCase(TestCase):
 
     def test_model_fact_table(self):
         assert self.simple_model.fact_table_name == 'simple'
+        assert 'simple' in repr(self.simple_model), repr(self.simple_model)
 
     def test_deref(self):
         assert self.simple_model['foo'].name == 'foo'

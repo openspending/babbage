@@ -1,0 +1,28 @@
+(*
+Description of the cuts/drilldown/ordering query structure.
+*)
+
+all = cuts | drilldowns | fields | orders ;
+
+cuts = cut { '|' cut } ;
+cut = ref ':' value ;
+
+drilldowns = dimension { '|' dimension } ;
+dimension = ref ;
+
+fields = field { ',' field } ;
+field = ref ;
+
+orders = order { ',' order } ;
+order = ref [ ':' direction ] ;
+direction = 'asc' | 'desc' ;
+
+ref = ?/[a-zA-Z][A-Za-z0-9\._]*[A-Za-z0-9]/? ;
+
+value = date_value | int_value | string_value ;
+date_value = ?/[0-9]{4}-[0-9]{2}-[0-9]{2}/? ;
+int_value = ?/[0-9]+/? ;
+string_value = escaped_string | @:{?/[^|]*/?} ;
+escaped_string = ESCAPED_STRING ;
+ESCAPED_STRING = '"'  @:{?/[^"\\\\]*/?|ESC} '"' ;
+ESC = ?/\\\\['"\\\\nrtbfv]/? | ?/\\\\u[a-fA-F0-9]{4}/? ;

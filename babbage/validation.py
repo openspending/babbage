@@ -2,7 +2,8 @@ import os
 import json
 from jsonschema import Draft4Validator, FormatChecker
 
-schema_path = os.path.join(os.path.dirname(__file__), 'schema')
+from babbage.util import SCHEMA_PATH
+
 checker = FormatChecker()
 
 
@@ -20,7 +21,9 @@ def check_attribute_exists(instance):
 
 
 def load_validator(name):
-    with open(os.path.join(schema_path, name)) as fh:
+    """ Load the JSON Schema Draft 4 validator with the given name from the
+    local schema directory. """
+    with open(os.path.join(SCHEMA_PATH, name)) as fh:
         schema = json.load(fh)
     Draft4Validator.check_schema(schema)
     return Draft4Validator(schema, format_checker=checker)
@@ -29,39 +32,3 @@ def load_validator(name):
 def validate_model(model):
     validator = load_validator('model.json')
     validator.validate(model)
-
-
-
-
-
-#
-# class LocalSchema(RefResolver):
-#
-#     def resolve_remote(self, url):
-#         local_path = os.path.join(schema_path, url)
-#         if os.path.isfile(local_path):
-#             with open(local_path) as fh:
-#                 return json.load(fh)
-#         return super(LocalSchema, self).resolve_remote(url)
-#
-#
-#
-# print schema
-# resolver = LocalSchema('', schema, {})
-# validator = Draft4Validator(schema, resolver=resolver)
-# print validator
-#
-# test = {
-#     'name': 'foo',
-#     'dimensions': {
-#         'foo': {'label': 'Foo'},
-#         'bar': {'label': 'Bar'}
-#     },
-#     'measures': {
-#         'amount': {
-#             'label': 'Amount in USD'
-#         }
-#     }
-# }
-#
-# print validator.validate(test, schema)

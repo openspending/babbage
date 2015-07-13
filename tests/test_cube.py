@@ -32,6 +32,13 @@ class CubeTestCase(TestCase):
         self.cube = Cube(self.engine, 'cra', model)
         self.cube.map('cofog1.name')
 
+    def test_dimension_column_qualified(self):
+        model = self.cra_model.copy()
+        name = 'cra.cofog1_name'
+        model['dimensions']['cofog1']['attributes']['name']['column'] = name
+        self.cube = Cube(self.engine, 'cra', model)
+        self.cube.map('cofog1.name')
+
     def test_map_ref(self):
         assert self.cube.map('amount').name == 'amount'
         assert self.cube.map('cofog1.name').name == 'cofog1_name'

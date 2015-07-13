@@ -46,7 +46,7 @@ def create_table(table_name, columns):
     table = schema.Table(table_name, meta)
     id_col = schema.Column('_id', types.Integer, primary_key=True)
     table.append_column(id_col)
-    for (_, name, typ) in column_specs(columns):
+    for (_, name, typ) in sorted(column_specs(columns)):
         col = schema.Column(name, typ)
         table.append_column(col)
 

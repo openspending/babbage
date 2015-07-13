@@ -64,7 +64,7 @@ class Model(object):
             return False
 
     def __repr__(self):
-        return "<Model(%r)>" % self.spec.get('name')
+        return "<Model(%r)>" % self.fact_table_name
 
     def to_dict(self):
         data = self.spec.copy()

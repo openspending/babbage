@@ -17,19 +17,19 @@ class CubeManager(object):
         self.engine = engine
 
     @abstractmethod
-    def list_cubes(self):
+    def list_cubes(self):  # pragma: no cover
         """ List the available cubes, returning a name string for each available
         cube in the local system. """
         pass
 
     @abstractmethod
-    def has_cube(self, name):
+    def has_cube(self, name):  # pragma: no cover
         """ Given a cube name, check if a cube of that name exists. Returns
         a boolean. """
         pass
 
     @abstractmethod
-    def get_cube_model(self, name):
+    def get_cube_model(self, name):  # pragma: no cover
         """ Given a cube name, return the model specification (as a dict) for
         that cube. This can also return a ``Model`` instance. """
         pass

@@ -34,7 +34,8 @@ setup(
         'flask >= 0.10.1',
         'jsonschema >= 2.5.1',
         'sqlalchemy >= 1.0',
-        'psycopg2 >= 2.6'
+        'psycopg2 >= 2.6',
+        'grako >= 3.6.1'
     ],
     tests_require=[
         'nose >= 1.3.7',

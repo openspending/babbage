@@ -26,13 +26,6 @@ class Cube(object):
                                    table=name)
         return Table(name, self.meta, autoload=True)
 
-    def map(self, ref):
-        """ Map a model reference to an physical column in the database. """
-        concept = self.model[ref]
-        if isinstance(concept, Dimension):
-            concept = concept.key_attribute
-        return self._physical_column(concept.column_name)
-
     def _physical_column(self, column_name):
         """ Return the SQLAlchemy Column object matching a given, possibly
         qualified, column name (i.e.: 'table.column'). If no table is named,
@@ -46,14 +39,24 @@ class Cube(object):
                                    table=table_name, column=column_name)
         return table.columns[column_name]
 
+    def map(self, ref):
+        """ Map a model reference to an physical column in the database. """
+        # TODO: do I want to alias to the ref name?
+        concept = self.model[ref]
+        if isinstance(concept, Dimension):
+            concept = concept.key_attribute
+        return self._physical_column(concept.column_name)
+
     # mock API (to be implemented):
-    def aggregate(self):
+    def aggregate(self, aggregates=None, drilldowns=None, cuts=None,
+                  order=None, page=None, page_size=None):
         pass
 
-    def members(self, ref):
+    def members(self, ref, cuts=None, order=None, page=None, page_size=None):
         pass
 
-    def facts(self):
+    def facts(self, refs=None, cuts=None, order=None, page=None,
+              page_size=None):
         pass
 
     def __repr__(self):
