@@ -32,9 +32,13 @@ class TypeSemantics(object):
 
     @classmethod
     def parse(cls, text):
-        semantics = cls()
-        model.parse(text, start=cls.start, semantics=semantics)
-        return semantics.results
+        if isinstance(text, six.string_types):
+            semantics = cls()
+            model.parse(text, start=cls.start, semantics=semantics)
+            return semantics.results
+        elif text is None:
+            text = []
+        return text
 
 
 class CutsParser(TypeSemantics):

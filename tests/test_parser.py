@@ -1,3 +1,5 @@
+from datetime import date
+
 from .util import TestCase
 
 from babbage.parser import CutsParser
@@ -21,6 +23,15 @@ class ParserTestCase(TestCase):
         cuts = CutsParser.parse('foo:"bar|lala"|test:5')
         assert len(cuts) == 2, cuts
 
+    def test_cuts_date(self):
+        cuts = CutsParser.parse('foo:2015-01-04')
+        assert cuts[0][2] == date(2015, 01, 04), cuts
+
     def test_cuts_null(self):
         cuts = CutsParser.parse('foo:')
         assert cuts[0][2] is None, cuts
+
+    def test_null_filter(self):
+        cuts = CutsParser.parse(None)
+        assert isinstance(cuts, list)
+        assert not len(cuts)
