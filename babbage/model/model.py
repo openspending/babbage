@@ -33,9 +33,16 @@ class Model(object):
             yield Measure(self, name, data)
 
     @property
+    def attributes(self):
+        for dimension in self.dimensions:
+            for attribute in dimension.attributes:
+                yield attribute
+
+    @property
     def aggregates(self):
         # TODO: nicer way than hard-coding this?
         yield Aggregate(self, 'Facts', 'count')
+
         for measure in self.measures:
             for function in measure.aggregates:
                 yield Aggregate(self, measure.label, function,

@@ -13,11 +13,14 @@ dimension = ref ;
 fields = field { ',' field } ;
 field = ref ;
 
+aggregates = aggregate { '|' aggregate } ;
+aggregate = ref ;
+
 orders = order { ',' order } ;
 order = ref [ ':' direction ] ;
 direction = 'asc' | 'desc' ;
 
-ref = ?/[a-zA-Z][A-Za-z0-9\._]*[A-Za-z0-9]/? ;
+ref = ?/[A-Za-z0-9\._]*[A-Za-z0-9]/? ;
 
 value = date_value | int_value | string_value ;
 date_value = ?/[0-9]{4}-[0-9]{2}-[0-9]{2}/? ;

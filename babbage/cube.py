@@ -39,6 +39,16 @@ class Cube(object):
                                    table=table_name, column=column_name)
         return table.columns[column_name]
 
+    def _get_fact_pk(self):
+        """ Try to determine the primary key of the fact table for use in
+        fact table counting. """
+        table = self._load_table(self.model.fact_table_name)
+        keys = [c for c in table.columns if c.primary_key]
+        if len(keys) != 1:
+            raise BindingException('Fact table has no single OK: %r' % table,
+                                   table=self.model.fact_table_name)
+        return keys[0]
+
     def map(self, ref):
         """ Map a model reference to an physical column in the database. """
         # TODO: do I want to alias to the ref name?

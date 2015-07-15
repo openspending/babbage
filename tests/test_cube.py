@@ -21,6 +21,10 @@ class CubeTestCase(TestCase):
         table = self.cube._load_table(self.cra_table.name)
         assert table is not None
 
+    def test_table_pk(self):
+        pk = self.cube._get_fact_pk()
+        assert pk is not None
+
     @raises(BindingException)
     def test_table_load_nonexist(self):
         self.cube._load_table('lalala')

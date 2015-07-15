@@ -19,6 +19,10 @@ class ParserTestCase(TestCase):
         cuts = CutsParser(self.cube).parse('foo:bar')
         assert len(cuts) == 1, cuts
 
+    def test_cuts_quoted(self):
+        cuts = CutsParser(self.cube).parse('foo:"bar lala"')
+        assert len(cuts) == 1, cuts
+
     def test_cuts_multiple(self):
         cuts = CutsParser(self.cube).parse('foo:bar|bar:5')
         assert len(cuts) == 2, cuts

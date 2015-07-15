@@ -54,6 +54,7 @@ class CutsParser(Parser):
         value = ast[2]
         if isinstance(value, six.string_types) and len(value.strip()) == 0:
             value = None
+        # TODO: can you filter measures or aggregates?
         if ast[0] not in self.cube.model:
             raise QueryException('Invalid cut: %r' % ast[0])
         self.results.append((ast[0], ast[1], value))
@@ -63,7 +64,45 @@ class DrilldownsParser(Parser):
     """ Handle parser output for drilldowns. """
     start = "drilldowns"
 
-    def drilldown(self, ast):
-        print ast
-        # self.results.append((ast[0], ast[1], ast[2]))
-        return ast
+    def dimension(self, ast):
+        if ast not in self.cube.model:
+            raise QueryException('Invalid drilldown: %r' % ast)
+        self.results.append(ast)
+
+
+class FieldsParser(Parser):
+    """ Handle parser output for field specifications. """
+    start = "fields"
+
+    def field(self, ast):
+        refs = [m.ref for m in self.cube.model.measures] + \
+            [a.ref for a in self.cube.model.attributes]
+        if ast not in refs:
+            raise QueryException('Invalid field: %r' % ast)
+        self.results.append(ast)
+
+
+class AggregatesParser(Parser):
+    """ Handle parser output for field specifications. """
+    start = "aggregates"
+
+    def aggregate(self, ast):
+        refs = [a.ref for a in self.cube.model.aggregates]
+        if ast not in refs:
+            raise QueryException('Invalid aggregate: %r' % ast)
+        self.results.append(ast)
+
+
+class OrdersParser(Parser):
+    """ Handle parser output for sorting specifications, a tuple of a ref
+    and a direction (which is 'asc' if unspecified). """
+    start = "orders"
+
+    def order(self, ast):
+        if isinstance(ast, six.string_types):
+            ref, direction = ast, 'asc'
+        else:
+            ref, direction = ast[0], ast[2]
+        if ref not in self.cube.model:
+            raise QueryException('Invalid sorting criterion: %r' % ast)
+        self.results.append((ref, direction))
