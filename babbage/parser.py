@@ -1,9 +1,12 @@
 import os
 import json
+
 import grako
 import six
 import dateutil.parser
+from grako.exceptions import GrakoException
 
+from babbage.exc import QueryException
 from babbage.util import SCHEMA_PATH
 
 with open(os.path.join(SCHEMA_PATH, 'parser.ebnf'), 'rb') as fh:
@@ -11,12 +14,13 @@ with open(os.path.join(SCHEMA_PATH, 'parser.ebnf'), 'rb') as fh:
     model = grako.genmodel("all", grammar)
 
 
-class TypeSemantics(object):
+class Parser(object):
     """ Type casting for the basic primitives of the parser, e.g. strings,
     ints and dates. """
 
-    def __init__(self):
+    def __init__(self, cube):
         self.results = []
+        self.cube = cube
 
     def string_value(self, ast):
         text = ast[0]
@@ -30,18 +34,19 @@ class TypeSemantics(object):
     def date_value(self, ast):
         return dateutil.parser.parse(ast).date()
 
-    @classmethod
-    def parse(cls, text):
+    def parse(self, text):
         if isinstance(text, six.string_types):
-            semantics = cls()
-            model.parse(text, start=cls.start, semantics=semantics)
-            return semantics.results
+            try:
+                model.parse(text, start=self.start, semantics=self)
+                return self.results
+            except GrakoException, ge:
+                raise QueryException(ge.message)
         elif text is None:
             text = []
         return text
 
 
-class CutsParser(TypeSemantics):
+class CutsParser(Parser):
     """ Handle parser output for cuts. """
     start = "cuts"
 
@@ -49,15 +54,16 @@ class CutsParser(TypeSemantics):
         value = ast[2]
         if isinstance(value, six.string_types) and len(value.strip()) == 0:
             value = None
+        if ast[0] not in self.cube.model:
+            raise QueryException('Invalid cut: %r' % ast[0])
         self.results.append((ast[0], ast[1], value))
-        return ast
 
-#
-# class DrilldownsParser(TypeSemantics):
-#     """ Handle parser output for cuts. """
-#     start = "cuts"
-#
-#     def drilldown(self, ast):
-#         print ast
-#         # self.results.append((ast[0], ast[1], ast[2]))
-#         return ast
+
+class DrilldownsParser(Parser):
+    """ Handle parser output for drilldowns. """
+    start = "drilldowns"
+
+    def drilldown(self, ast):
+        print ast
+        # self.results.append((ast[0], ast[1], ast[2]))
+        return ast

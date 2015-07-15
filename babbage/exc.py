@@ -14,3 +14,9 @@ class BindingException(BabbageException):
     def __init__(self, message, table=None, column=None):
         super(BindingException, self).__init__(message, table=table,
                                                column=column)
+
+
+class QueryException(BabbageException):
+    """ A class of exceptions that occur when an invalid query is submitted
+    or the query cannot be executed. """
+    pass
