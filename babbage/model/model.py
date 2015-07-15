@@ -1,6 +1,7 @@
 from babbage.validation import validate_model
 from babbage.model.dimension import Dimension
 from babbage.model.measure import Measure
+from babbage.model.aggregate import Aggregate
 
 
 class Model(object):
@@ -32,11 +33,22 @@ class Model(object):
             yield Measure(self, name, data)
 
     @property
+    def aggregates(self):
+        # TODO: nicer way than hard-coding this?
+        yield Aggregate(self, 'Facts', 'count')
+        for measure in self.measures:
+            for function in measure.aggregates:
+                yield Aggregate(self, measure.label, function,
+                                measure=measure)
+
+    @property
     def concepts(self):
         """ Return all existing concepts, i.e. dimensions, measures and
         attributes within the model. """
         for measure in self.measures:
             yield measure
+        for aggregate in self.aggregates:
+            yield aggregate
         for dimension in self.dimensions:
             yield dimension
             for attribute in dimension.attributes:
@@ -70,4 +82,5 @@ class Model(object):
         data = self.spec.copy()
         data['measures'] = {m.name: m.to_dict() for m in self.measures}
         data['dimensions'] = {d.name: d.to_dict() for d in self.dimensions}
+        data['aggregates'] = {a.ref: a.to_dict() for a in self.aggregates}
         return data

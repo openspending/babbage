@@ -12,4 +12,14 @@ class Concept(object):
 
     @property
     def ref(self):
+        """ A unique reference within the context of this model. """
         return self.name
+
+    def __eq__(self, other):
+        """ Test concept equality by means of references. """
+        if hasattr(other, 'ref'):
+            return other.ref == self.ref
+        return self.ref == other
+
+    def __unicode__(self):
+        return self.ref

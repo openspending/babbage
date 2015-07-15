@@ -10,6 +10,7 @@ class Measure(Concept):
     def __init__(self, model, name, spec):
         super(Measure, self).__init__(model, name, spec)
         self.column_name = spec.get('column')
+        self.aggregates = spec.get('aggregates', ['sum'])
 
     def __repr__(self):
         return "<Measure(%s)>" % self.ref
