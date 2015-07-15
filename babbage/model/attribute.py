@@ -9,7 +9,6 @@ class Attribute(Concept):
     def __init__(self, dimension, name, spec):
         super(Attribute, self).__init__(dimension.model, name, spec)
         self.dimension = dimension
-        self.column_name = spec.get('column')
 
     @property
     def ref(self):

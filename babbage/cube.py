@@ -42,12 +42,15 @@ class Cube(object):
     def _get_fact_pk(self):
         """ Try to determine the primary key of the fact table for use in
         fact table counting. """
-        table = self._load_table(self.model.fact_table_name)
-        keys = [c for c in table.columns if c.primary_key]
+        keys = [c for c in self._get_fact_table().columns if c.primary_key]
         if len(keys) != 1:
-            raise BindingException('Fact table has no single OK: %r' % table,
+            raise BindingException('Fact table has no single OK: %r' %
+                                        self.model.fact_table_name,
                                    table=self.model.fact_table_name)
         return keys[0]
+
+    def _get_fact_table(self):
+        return self._load_table(self.model.fact_table_name)
 
     def map(self, ref):
         """ Map a model reference to an physical column in the database. """

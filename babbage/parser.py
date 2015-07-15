@@ -65,7 +65,9 @@ class DrilldownsParser(Parser):
     start = "drilldowns"
 
     def dimension(self, ast):
-        if ast not in self.cube.model:
+        refs = [d.ref for d in self.cube.model.dimensions] + \
+               [a.ref for a in self.cube.model.attributes]
+        if ast not in refs:
             raise QueryException('Invalid drilldown: %r' % ast)
         self.results.append(ast)
 
@@ -76,7 +78,8 @@ class FieldsParser(Parser):
 
     def field(self, ast):
         refs = [m.ref for m in self.cube.model.measures] + \
-            [a.ref for a in self.cube.model.attributes]
+               [d.ref for d in self.cube.model.dimensions] + \
+               [a.ref for a in self.cube.model.attributes]
         if ast not in refs:
             raise QueryException('Invalid field: %r' % ast)
         self.results.append(ast)

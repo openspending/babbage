@@ -1,3 +1,5 @@
+from sqlalchemy import func
+
 from babbage.model.concept import Concept
 
 
@@ -16,6 +18,18 @@ class Aggregate(Concept):
         if self.measure is not None:
             return '%s.%s' % (self.measure.ref, self.function)
         return '_%s' % self.function
+
+    def bind_one(self, cube):
+        """ When one column needs to match, use the key. """
+        if self.measure:
+            table, column = self.measure.bind_one(cube)
+        else:
+            table = cube._get_fact_table()
+            column = cube._get_fact_pk()
+        # apply the SQL aggregation function:
+        column = getattr(func, self.function)(column).label(self.ref)
+        column.quote = True
+        return table, column
 
     def __repr__(self):
         return "<Aggregate(%s)>" % self.ref

@@ -5,7 +5,7 @@ from .util import TestCase, load_json_fixture
 
 from babbage.exc import QueryException
 from babbage.cube import Cube
-from babbage.parser import CutsParser
+from babbage.parser import CutsParser, OrdersParser, DrilldownsParser
 
 
 class ParserTestCase(TestCase):
@@ -48,3 +48,20 @@ class ParserTestCase(TestCase):
         cuts = CutsParser(self.cube).parse(None)
         assert isinstance(cuts, list)
         assert not len(cuts)
+
+    def test_order(self):
+        cuts = OrdersParser(self.cube).parse('foo:desc,bar')
+        assert cuts[0][1] == "desc", cuts
+        assert cuts[1][1] == "asc", cuts
+
+    @raises(QueryException)
+    def test_order_invalid(self):
+        OrdersParser(self.cube).parse('fooxx:desc')
+
+    def test_drilldowns(self):
+        dd = DrilldownsParser(self.cube).parse('foo|bar')
+        assert len(dd) == 2
+
+    @raises(QueryException)
+    def test_drilldowns_invalid(self):
+        DrilldownsParser(self.cube).parse('amount')
