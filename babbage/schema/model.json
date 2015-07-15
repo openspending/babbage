@@ -90,11 +90,22 @@
             },
             "additionalProperties": false
         },
+        "aggregates": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": ["sum", "max", "min", "avg", "count"]
+            },
+            "default": ["sum"],
+            "minItems": 1,
+            "uniqueItems": true
+        },
         "measure": {
             "type": "object",
             "properties": {
                 "label": {"$ref": "#/definitions/label"},
                 "description": {"$ref": "#/definitions/description"},
+                "aggregates": {"$ref": "#/definitions/aggregates"},
                 "column": {"$ref": "#/definitions/column"}
             },
             "required": ["label", "column"]

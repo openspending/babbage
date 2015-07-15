@@ -58,6 +58,23 @@ class ValidationTestCase(TestCase):
         validate_model(model)
 
     @raises(ValidationError)
+    def test_invalid_aggregate(self):
+        model = self.simple_model.copy()
+        model['measures']['amount']['aggregates'] = 'schnasel'
+        validate_model(model)
+
+    @raises(ValidationError)
+    def test_invalid_aggregate_string(self):
+        model = self.simple_model.copy()
+        model['measures']['amount']['aggregates'] = 'count'
+        validate_model(model)
+
+    def test_invalid_aggregate_string(self):
+        model = self.simple_model.copy()
+        model['measures']['amount']['aggregates'] = ['count']
+        validate_model(model)
+
+    @raises(ValidationError)
     def test_dimension_without_attributes(self):
         model = self.simple_model.copy()
         model['dimensions']['foo']['attributes'] = {}
