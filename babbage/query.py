@@ -96,8 +96,7 @@ class Query(object):
 
     def _get_unpaginated_query(self):
         # A stable sorting of the fields makes counts stable.
-        fields = sorted(self._fields, key=lambda x: unicode(x))
-        return select(columns=fields,
+        return select(columns=self._fields,
                       whereclause=and_(*self._cuts),
                       group_by=self._drilldowns,
                       order_by=self._orders,
