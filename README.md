@@ -1,6 +1,6 @@
 # Babbage Analytical Engine
 
-[![Build Status](https://travis-ci.org/spendb/babbage.svg?branch=master)](https://travis-ci.org/pudo/babbage)
+[![Build Status](https://travis-ci.org/spendb/babbage.svg?branch=master)](https://travis-ci.org/spendb/babbage)
 [![Coverage Status](https://coveralls.io/repos/spendb/babbage/badge.svg?branch=master&service=github)](https://coveralls.io/github/spendb/babbage?branch=master)
 
 
