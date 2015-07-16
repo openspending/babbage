@@ -7,6 +7,8 @@ from sqlalchemy import MetaData, create_engine, types, schema
 from flask import Flask
 from flask.ext.testing import TestCase as FlaskTestCase
 
+from babbage.api import blueprint
+
 FIXTURE_PATH = os.path.join(os.path.dirname(__file__), 'fixtures')
 DATABASE_URI = os.environ.get('BABBAGE_TEST_DB')
 assert DATABASE_URI, 'Set the envvar BABBAGE_TEST_DB to a PostgreSQL URI'
@@ -95,6 +97,7 @@ class TestCase(FlaskTestCase):
 
     def create_app(self):
         app = Flask('test')
+        app.register_blueprint(blueprint, url_prefix='/bbg')
         app.config['DEBUG'] = True
         app.config['TESTING'] = True
         app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True
