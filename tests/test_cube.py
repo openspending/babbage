@@ -62,7 +62,7 @@ class CubeTestCase(TestCase):
         self.cube.facts(cuts='cofogXX:"4"')
 
     def test_facts_basic_fields(self):
-        facts = self.cube.facts(refs='cofog1,cofog2')
+        facts = self.cube.facts(fields='cofog1,cofog2')
         assert facts['total_fact_count'] == 36, facts['total_fact_count']
         row0 = facts['data'][0]
         assert 'cofog1.name' in row0, row0
@@ -71,7 +71,7 @@ class CubeTestCase(TestCase):
 
     @raises(QueryException)
     def test_facts_invalid_field(self):
-        self.cube.facts(refs='cofog1,schnasel')
+        self.cube.facts(fields='cofog1,schnasel')
 
     def test_facts_paginate(self):
         facts = self.cube.facts(page_size=5)

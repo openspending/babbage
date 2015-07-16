@@ -92,13 +92,13 @@ class Cube(object):
             'page_size': page['page_size']
         }
 
-    def facts(self, refs=None, cuts=None, order=None, page=None,
+    def facts(self, fields=None, cuts=None, order=None, page=None,
               page_size=None):
         """ List all facts in the cube, returning only the specified references
         if these are specified. """
         q = select()
         cuts, q = Cuts(self).apply(q, cuts)
-        fields, q = Fields(self).apply(q, refs)
+        fields, q = Fields(self).apply(q, fields)
         count = count_results(self, q)
 
         ordering, q = Ordering(self).apply(q, order)

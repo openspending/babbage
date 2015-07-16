@@ -5,6 +5,7 @@ from datetime import date
 from werkzeug.exceptions import NotFound
 from flask import Blueprint, Response, request, current_app, json, url_for
 
+from babbage.exc import BabbageException
 
 blueprint = Blueprint('babbage_api', __name__)
 
@@ -15,6 +16,7 @@ def configure_api(app, manager):
     if not hasattr(app, 'extensions'):
         app.extensions = {}  # pragma: nocover
     app.extensions['babbage'] = manager
+    return blueprint
 
 
 def get_manager():
@@ -60,6 +62,15 @@ def url(*a, **kw):
     return url_for(*a, **kw)
 
 
+@blueprint.errorhandler(BabbageException)
+def handle_error(exc):
+    return jsonify({
+        'status': 'error',
+        'message': exc.message,
+        'context': exc.context
+    }, status=exc.http_equiv)
+
+
 @blueprint.route('/')
 def index():
     """ General system status report :) """
@@ -95,3 +106,44 @@ def model(name):
         'name': name,
         'model': cube.model
     })
+
+
+@blueprint.route('/cubes/<name>/aggregate')
+def aggregate(name):
+    """ Perform an aggregation request. """
+    cube = get_cube(name)
+    result = cube.aggregate(aggregates=request.args.get('aggregates'),
+                            drilldowns=request.args.get('drilldown'),
+                            cuts=request.args.get('cut'),
+                            order=request.args.get('order'),
+                            page=request.args.get('page'),
+                            page_size=request.args.get('pagesize'))
+    result['status'] = 'ok'
+    return jsonify(result)
+
+
+@blueprint.route('/cubes/<name>/facts')
+def facts(name):
+    """ List the fact table entries in the current cube. This is the full
+    materialized dataset. """
+    cube = get_cube(name)
+    result = cube.facts(fields=request.args.get('fields'),
+                        cuts=request.args.get('cut'),
+                        order=request.args.get('order'),
+                        page=request.args.get('page'),
+                        page_size=request.args.get('pagesize'))
+    result['status'] = 'ok'
+    return jsonify(result)
+
+
+@blueprint.route('/cubes/<name>/members/<ref>')
+def members(name, ref):
+    """ List the members of a specific dimension or the distinct values of a
+    given attribute. """
+    cube = get_cube(name)
+    result = cube.members(ref, cuts=request.args.get('cut'),
+                          order=request.args.get('order'),
+                          page=request.args.get('page'),
+                          page_size=request.args.get('pagesize'))
+    result['status'] = 'ok'
+    return jsonify(result)

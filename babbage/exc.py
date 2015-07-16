@@ -1,6 +1,7 @@
 
 class BabbageException(Exception):
     """ A stub exception class for all errors stemming from babbage calls. """
+    http_equiv = 500
 
     def __init__(self, message, **context):
         self.message = message
@@ -19,4 +20,4 @@ class BindingException(BabbageException):
 class QueryException(BabbageException):
     """ A class of exceptions that occur when an invalid query is submitted
     or the query cannot be executed. """
-    pass
+    http_equiv = 400
