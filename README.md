@@ -27,7 +27,7 @@ source repository and then use the provided ``Makefile`` to install the
 library (this requires ``virtualenv`` to be installed):
 
 ```bash
-$ git clone https://github.com/pudo/babbage.git
+$ git clone https://github.com/spendb/babbage.git
 $ cd babbage
 $ make install
 $ make test
