@@ -5,7 +5,7 @@ from .util import TestCase, load_json_fixture
 
 from babbage.exc import QueryException
 from babbage.cube import Cube
-from babbage.parser import Cuts, Ordering, Aggregates, Drilldowns
+from babbage.query import Cuts, Ordering, Aggregates, Drilldowns
 
 
 class ParserTestCase(TestCase):

@@ -1,7 +1,7 @@
 from sqlalchemy import and_, func
 from sqlalchemy.sql.expression import select
 
-from babbage.parser import Cuts, Drilldowns, Ordering, Fields, Aggregates
+from babbage.query import Cuts, Drilldowns, Ordering, Fields, Aggregates
 from babbage.util import parse_int
 
 
