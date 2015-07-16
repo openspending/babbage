@@ -23,9 +23,12 @@ setup(
     author_email='friedrich@pudo.org',
     url='http://github.com/pudo/babbage',
     license='MIT',
-    packages=find_packages(exclude=['ez_setup', 'examples', 'test']),
+    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     namespace_packages=[],
-    include_package_data=False,
+    include_package_data=True,
+    package_data={
+        '': ['babbage/schema/model.json', 'babbage/schema/parser.ebnf']
+    },
     zip_safe=False,
     install_requires=[
         'normality >= 0.2.2',
@@ -43,6 +46,6 @@ setup(
         'python-dateutil-2.4.2',
         'unicodecsv-0.13.0'
     ],
-    test_suite='test',
+    test_suite='tests',
     entry_points={}
 )
