@@ -22,7 +22,7 @@ class CubeTestCase(TestCase):
         assert table is not None
 
     def test_table_pk(self):
-        assert self.cube._fact_pk is not None
+        assert self.cube.fact_pk is not None
 
     @raises(BindingException)
     def test_table_load_nonexist(self):

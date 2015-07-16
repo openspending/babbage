@@ -24,7 +24,7 @@ class Aggregate(Concept):
         if self.measure:
             table, column = self.measure.bind(cube)
         else:
-            table, column = cube._fact_table, cube._fact_pk
+            table, column = cube.fact_table, cube.fact_pk
         # apply the SQL aggregation function:
         column = getattr(func, self.function)(column)
         column = column.label(self.ref)

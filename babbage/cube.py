@@ -14,26 +14,29 @@ class Cube(object):
     This functions as the central hub of functionality for accessing any
     data and queries. """
 
-    def __init__(self, engine, name, model):
+    def __init__(self, engine, name, model, fact_table=None):
         self.name = name
         if not isinstance(model, Model):
             model = Model(model)
+        self._fact_table = fact_table
         self.model = model
         self.engine = engine
         self.meta = MetaData(bind=engine)
 
     def _load_table(self, name):
         """ Reflect a given table from the database. """
+        if name == self.model.fact_table_name and self._fact_table is not None:
+            return self._fact_table
         if not self.engine.has_table(name):
             raise BindingException('Table does not exist: %r' % name,
                                    table=name)
         return Table(name, self.meta, autoload=True)
 
     @property
-    def _fact_pk(self):
+    def fact_pk(self):
         """ Try to determine the primary key of the fact table for use in
         fact table counting. """
-        keys = [c for c in self._fact_table.columns if c.primary_key]
+        keys = [c for c in self.fact_table.columns if c.primary_key]
         if len(keys) != 1:
             raise BindingException('Fact table has no single OK: %r' %
                                    self.model.fact_table_name,
@@ -41,7 +44,9 @@ class Cube(object):
         return keys[0]
 
     @property
-    def _fact_table(self):
+    def fact_table(self):
+        if self._fact_table:
+            return self._fact_table
         return self._load_table(self.model.fact_table_name)
 
     def aggregate(self, aggregates=None, drilldowns=None, cuts=None,
