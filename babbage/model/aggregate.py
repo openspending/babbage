@@ -24,10 +24,10 @@ class Aggregate(Concept):
         if self.measure:
             table, column = self.measure.bind_one(cube)
         else:
-            table = cube._get_fact_table()
-            column = cube._get_fact_pk()
+            table, column = cube._fact_table, cube._fact_pk
         # apply the SQL aggregation function:
-        column = getattr(func, self.function)(column).label(self.ref)
+        column = getattr(func, self.function)(column)
+        column = column.label(self.ref)
         column.quote = True
         return table, column
 

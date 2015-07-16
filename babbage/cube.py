@@ -2,6 +2,7 @@ from sqlalchemy import MetaData
 from sqlalchemy.schema import Table
 
 from babbage.model import Model
+from babbage.query import Query
 from babbage.exc import BindingException
 from babbage.model.dimension import Dimension
 
@@ -26,51 +27,68 @@ class Cube(object):
                                    table=name)
         return Table(name, self.meta, autoload=True)
 
-    def _physical_column(self, column_name):
-        """ Return the SQLAlchemy Column object matching a given, possibly
-        qualified, column name (i.e.: 'table.column'). If no table is named,
-        the fact table is assumed. """
-        table_name = self.model.fact_table_name
-        if '.' in column_name:
-            table_name, column_name = column_name.split('.', 1)
-        table = self._load_table(table_name)
-        if column_name not in table.columns:
-            raise BindingException('Column does not exist: %r' % column_name,
-                                   table=table_name, column=column_name)
-        return table.columns[column_name]
-
-    def _get_fact_pk(self):
+    @property
+    def _fact_pk(self):
         """ Try to determine the primary key of the fact table for use in
         fact table counting. """
-        keys = [c for c in self._get_fact_table().columns if c.primary_key]
+        keys = [c for c in self._fact_table.columns if c.primary_key]
         if len(keys) != 1:
             raise BindingException('Fact table has no single OK: %r' %
-                                        self.model.fact_table_name,
+                                   self.model.fact_table_name,
                                    table=self.model.fact_table_name)
         return keys[0]
 
-    def _get_fact_table(self):
+    @property
+    def _fact_table(self):
         return self._load_table(self.model.fact_table_name)
 
-    def map(self, ref):
-        """ Map a model reference to an physical column in the database. """
-        # TODO: do I want to alias to the ref name?
-        concept = self.model[ref]
-        if isinstance(concept, Dimension):
-            concept = concept.key_attribute
-        return self._physical_column(concept.column_name)
-
-    # mock API (to be implemented):
     def aggregate(self, aggregates=None, drilldowns=None, cuts=None,
                   order=None, page=None, page_size=None):
-        pass
+        """ Main aggregation function. This is used to compute a given set of
+        aggregates, grouped by a given set of drilldown dimensions (i.e.
+        dividers). The query can also be filtered and sorted. """
+        query = Query(self, distinct=True)
+        query.aggregate(aggregates)
+        query.cut(cuts)
+
+        summary = query.summary()
+
+        query.drilldown(drilldowns)
+        query.order(order)
+        query.paginate(page, page_size)
+        return {
+            'total_cell_count': query.count(),
+            'cells': list(query.generate()),
+            'summary': summary
+        }
 
     def members(self, ref, cuts=None, order=None, page=None, page_size=None):
-        pass
+        """ List all the distinct members of the given reference, filtered and
+        paginated. If the reference describes a dimension, all attributes are
+        returned. """
+        query = Query(self, distinct=True)
+        query.project(ref)
+        query.cut(cuts)
+        query.order(order)
+        query.paginate(page, page_size)
+        return {
+            'total_member_count': query.count(),
+            'data': list(query.generate())
+        }
 
     def facts(self, refs=None, cuts=None, order=None, page=None,
-              page_size=None):
-        pass
+        page_size=None):
+        """ List all facts in the cube, returning only the specified references
+        if these are specified. """
+        query = Query(self)
+        query.project(refs)
+        query.cut(cuts)
+        query.order(order)
+        query.paginate(page, page_size)
+        return {
+            'total_fact_count': query.count(),
+            'data': list(query.generate())
+        }
 
     def __repr__(self):
         return '<Cube(%r)' % self.name

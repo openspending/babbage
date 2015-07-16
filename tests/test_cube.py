@@ -22,8 +22,7 @@ class CubeTestCase(TestCase):
         assert table is not None
 
     def test_table_pk(self):
-        pk = self.cube._get_fact_pk()
-        assert pk is not None
+        assert self.cube._fact_pk is not None
 
     @raises(BindingException)
     def test_table_load_nonexist(self):
@@ -34,16 +33,66 @@ class CubeTestCase(TestCase):
         model = self.cra_model.copy()
         model['dimensions']['cofog1']['attributes']['name']['column'] = 'lala'
         self.cube = Cube(self.engine, 'cra', model)
-        self.cube.map('cofog1.name')
+        self.cube.model['cofog1.name'].bind_one(self.cube)
 
     def test_dimension_column_qualified(self):
         model = self.cra_model.copy()
         name = 'cra.cofog1_name'
         model['dimensions']['cofog1']['attributes']['name']['column'] = name
         self.cube = Cube(self.engine, 'cra', model)
-        self.cube.map('cofog1.name')
+        self.cube.model['cofog1.name'].bind_one(self.cube)
 
-    def test_map_ref(self):
-        assert self.cube.map('amount').name == 'amount'
-        assert self.cube.map('cofog1.name').name == 'cofog1_name'
-        assert self.cube.map('cofog1').name == 'cofog1_name'
+    def test_facts_basic(self):
+        facts = self.cube.facts()
+        assert facts['total_fact_count'] == 36
+        assert len(facts['data']) == 36, len(facts['data'])
+        row0 = facts['data'][0]
+        assert 'cofog1.name' in row0, row0
+        assert 'amount' in row0, row0
+        assert 'amount.sum' not in row0, row0
+        assert '_count' not in row0, row0
+
+    def test_facts_basic_filter(self):
+        facts = self.cube.facts(cuts='cofog1:"4"')
+        assert facts['total_fact_count'] == 12
+        assert len(facts['data']) == 12, len(facts['data'])
+
+    def test_facts_basic_fields(self):
+        facts = self.cube.facts(refs='cofog1,cofog2')
+        assert facts['total_fact_count'] == 36, facts['total_fact_count']
+        row0 = facts['data'][0]
+        assert 'cofog1.name' in row0, row0
+        assert 'amount' not in row0, row0
+        assert 'amount.sum' not in row0, row0
+
+    def test_facts_paginate(self):
+        facts = self.cube.facts(page_size=5)
+        assert facts['total_fact_count'] == 36, facts['total_fact_count']
+        assert len(facts['data']) == 5, len(facts['data'])
+
+    def test_members_basic(self):
+        members = self.cube.members('cofog1')
+        assert members['total_member_count'] == 4, members['total_member_count']
+        assert len(members['data']) == 4, len(members['data'])
+        row0 = members['data'][0]
+        assert 'cofog1.name' in row0, row0
+        assert 'amount' not in row0, row0
+
+    def test_members_paginate(self):
+        members = self.cube.members('cofog1', page_size=2)
+        assert members['total_member_count'] == 4, members['total_member_count']
+        assert len(members['data']) == 2, len(members['data'])
+
+    def test_aggregate_basic(self):
+        aggs = self.cube.aggregate(drilldowns='cofog1')
+        assert aggs['total_cell_count'] == 4, aggs['total_member_count']
+        assert len(aggs['cells']) == 4, len(aggs['data'])
+        row0 = aggs['cells'][0]
+        assert 'cofog1.name' in row0, row0
+        assert 'amount.sum' in row0, row0
+        assert 'amount' not in row0, row0
+
+    def test_aggregate_empty(self):
+        aggs = self.cube.aggregate(drilldowns='cofog1', page_size=0)
+        assert aggs['total_cell_count'] == 4, aggs['total_member_count']
+        assert len(aggs['cells']) == 0, len(aggs['data'])

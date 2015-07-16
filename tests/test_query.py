@@ -64,10 +64,34 @@ class QueryTestCase(TestCase):
         q = Query(self.cube)
         q.project('cofog1.name,amount.sum')
 
-    # def test_make_query(self):
-    #     q = Query(self.cube)
-    #     q.project('cofog1.name,cofog2')
-    #     q.cut('cofog1.name:01')
-    #     q.order('amount:desc,cofog1.name')
-    #     print q._get_unpaginated_query()
-    #     assert False
+    def test_basic_query(self):
+        q = Query(self.cube)
+        q.project('cofog1.name,cofog2')
+        q.cut('cofog1.name:"4"')
+        q.order('amount:desc,cofog1.name')
+        rows = list(q.generate())
+        assert len(rows) == 12, rows
+
+    def test_basic_count(self):
+        q = Query(self.cube)
+        q.project(None)
+        assert q.count() == 36, q.count()
+        q.cut('cofog1.name:"4"')
+        assert q.count() == 12, q.count()
+
+    def test_drilldown_query(self):
+        q = Query(self.cube)
+        q.aggregate(None)
+        q.drilldown('cofog1')
+        rows = list(q.generate())
+        assert len(rows) == 4, rows
+        assert 'cofog1.name' in rows[0], rows[0]
+
+    def test_drilldown_count(self):
+        q = Query(self.cube)
+        q.aggregate(None)
+        q.drilldown('cofog1')
+        # print len(list(q.generate()))
+        assert q.count() == 4, q.count()
+        q.cut('cofog1.name:"4"')
+        assert q.count() == 1, q.count()
