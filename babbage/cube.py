@@ -1,8 +1,11 @@
 from sqlalchemy import MetaData
 from sqlalchemy.schema import Table
+from sqlalchemy.sql.expression import select
 
 from babbage.model import Model
-from babbage.old_query import Query
+from babbage.query import count_results, generate_results, first_result
+from babbage.query import Cuts, Drilldowns, Fields, Ordering, Aggregates
+from babbage.query import Pagination
 from babbage.exc import BindingException
 
 
@@ -46,18 +49,19 @@ class Cube(object):
         """ Main aggregation function. This is used to compute a given set of
         aggregates, grouped by a given set of drilldown dimensions (i.e.
         dividers). The query can also be filtered and sorted. """
-        query = Query(self, distinct=True)
-        query.aggregate(aggregates)
-        query.cut(cuts)
+        q = select(distinct=True)
+        q = Cuts(self).apply(q, cuts)
+        q = Aggregates(self).apply(q, aggregates)
+        summary = first_result(self, q)
 
-        summary = query.summary()
+        q = Drilldowns(self).apply(q, drilldowns)
+        count = count_results(self, q)
 
-        query.drilldown(drilldowns)
-        query.order(order)
-        query.paginate(page, page_size)
+        q = Pagination(self).apply(q, page, page_size)
+        q = Ordering(self).apply(q, order)
         return {
-            'total_cell_count': query.count(),
-            'cells': list(query.generate()),
+            'total_cell_count': count,
+            'cells': list(generate_results(self, q)),
             'summary': summary
         }
 
@@ -65,28 +69,32 @@ class Cube(object):
         """ List all the distinct members of the given reference, filtered and
         paginated. If the reference describes a dimension, all attributes are
         returned. """
-        query = Query(self, distinct=True)
-        query.project(ref)
-        query.cut(cuts)
-        query.order(order)
-        query.paginate(page, page_size)
+        q = select(distinct=True)
+        q = Cuts(self).apply(q, cuts)
+        q = Fields(self).apply(q, ref)
+        q = Ordering(self).apply(q, order)
+        count = count_results(self, q)
+
+        q = Pagination(self).apply(q, page, page_size)
         return {
-            'total_member_count': query.count(),
-            'data': list(query.generate())
+            'total_member_count': count,
+            'data': list(generate_results(self, q))
         }
 
     def facts(self, refs=None, cuts=None, order=None, page=None,
               page_size=None):
         """ List all facts in the cube, returning only the specified references
         if these are specified. """
-        query = Query(self)
-        query.project(refs)
-        query.cut(cuts)
-        query.order(order)
-        query.paginate(page, page_size)
+        q = select()
+        q = Cuts(self).apply(q, cuts)
+        q = Fields(self).apply(q, refs)
+        count = count_results(self, q)
+
+        q = Ordering(self).apply(q, order)
+        q = Pagination(self).apply(q, page, page_size)
         return {
-            'total_fact_count': query.count(),
-            'data': list(query.generate())
+            'total_fact_count': count,
+            'data': list(generate_results(self, q))
         }
 
     def __repr__(self):

@@ -17,3 +17,17 @@ class Ordering(Parser):
         if ref not in self.cube.model:
             raise QueryException('Invalid sorting criterion: %r' % ast)
         self.results.append((ref, direction))
+
+    def apply(self, q, ordering):
+        """ Sort on a set of field specifications of the type (ref, direction)
+        in order of the submitted list. """
+        for (ref, direction) in self.parse(ordering):
+            table, column = self.cube.model[ref].bind_one(self.cube)
+            column = column.asc() if direction == 'asc' else column.desc()
+            q = self.ensure_table(q, table)
+            q = q.order_by(column.nullslast())
+
+        if not len(self.results):
+            for column in q.columns:
+                q = q.order_by(column.asc().nullslast())
+        return q

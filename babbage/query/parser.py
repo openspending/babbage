@@ -45,3 +45,8 @@ class Parser(object):
         elif text is None:
             text = []
         return text
+
+    def ensure_table(self, q, table):
+        if table not in q.froms:
+            q = q.select_from(table)
+        return q

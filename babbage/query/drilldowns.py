@@ -12,3 +12,13 @@ class Drilldowns(Parser):
         if ast not in refs:
             raise QueryException('Invalid drilldown: %r' % ast)
         self.results.append(ast)
+
+    def apply(self, q, drilldowns):
+        """ Apply a set of grouping criteria and project them. """
+        for drilldown in self.parse(drilldowns):
+            drilldown = self.cube.model[drilldown]
+            for (table, column) in drilldown.bind_many(self.cube):
+                q = self.ensure_table(q, table)
+                q = q.column(column)
+                q = q.group_by(column)
+        return q

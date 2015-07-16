@@ -13,3 +13,19 @@ class Fields(Parser):
         if ast not in refs:
             raise QueryException('Invalid field: %r' % ast)
         self.results.append(ast)
+
+    def apply(self, q, fields):
+        """ Define a set of fields to return for a non-aggregated query. """
+        for field in self.parse(fields):
+            for (table, column) in self.cube.model[field].bind_many(self.cube):
+                q = self.ensure_table(q, table)
+                q = q.column(column)
+
+        if not len(self.results):
+            # If no fields are requested, return all available fields.
+            for c in list(self.cube.model.attributes) + \
+                    list(self.cube.model.measures):
+                table, column = c.bind_one(self.cube)
+                q = self.ensure_table(q, table)
+                q = q.column(column)
+        return q
