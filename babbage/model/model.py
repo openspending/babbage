@@ -61,6 +61,17 @@ class Model(object):
             for attribute in dimension.attributes:
                 yield attribute
 
+    def match(self, ref):
+        """ Get all concepts matching this ref. For a dimension, that is all
+        its attributes, but not the dimension itself. """
+        try:
+            concept = self[ref]
+            if not isinstance(concept, Dimension):
+                return [concept]
+            return [a for a in concept.attributes]
+        except KeyError:
+            return []
+
     @property
     def exists(self):
         """ Check if the model satisfies the basic conditions for being

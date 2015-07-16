@@ -21,6 +21,7 @@ class Parser(object):
 
     def __init__(self, cube):
         self.results = []
+        self.info = {}
         self.cube = cube
 
     def string_value(self, ast):

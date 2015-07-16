@@ -29,14 +29,9 @@ class Dimension(Concept):
             if attr.name == self.spec.get('key_attribute'):
                 return attr
 
-    def bind_one(self, cube):
+    def bind(self, cube):
         """ When one column needs to match, use the key. """
-        return self.key_attribute.bind_one(cube)
-
-    def bind_many(self, cube):
-        """ In the special case of projecting a dimension, we want to get all
-        matching columns (i.e. all attributes). """
-        return [a.bind_one(cube) for a in self.attributes]
+        return self.key_attribute.bind(cube)
 
     def __repr__(self):
         return "<Dimension(%s)>" % self.ref

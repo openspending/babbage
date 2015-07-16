@@ -33,14 +33,14 @@ class CubeTestCase(TestCase):
         model = self.cra_model.copy()
         model['dimensions']['cofog1']['attributes']['name']['column'] = 'lala'
         self.cube = Cube(self.engine, 'cra', model)
-        self.cube.model['cofog1.name'].bind_one(self.cube)
+        self.cube.model['cofog1.name'].bind(self.cube)
 
     def test_dimension_column_qualified(self):
         model = self.cra_model.copy()
         name = 'cra.cofog1_name'
         model['dimensions']['cofog1']['attributes']['name']['column'] = name
         self.cube = Cube(self.engine, 'cra', model)
-        self.cube.model['cofog1.name'].bind_one(self.cube)
+        self.cube.model['cofog1.name'].bind(self.cube)
 
     def test_facts_basic(self):
         facts = self.cube.facts()

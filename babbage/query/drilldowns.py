@@ -16,8 +16,8 @@ class Drilldowns(Parser):
     def apply(self, q, drilldowns):
         """ Apply a set of grouping criteria and project them. """
         for drilldown in self.parse(drilldowns):
-            drilldown = self.cube.model[drilldown]
-            for (table, column) in drilldown.bind_many(self.cube):
+            for attribute in self.cube.model.match(drilldown):
+                table, column = attribute.bind(self.cube)
                 q = self.ensure_table(q, table)
                 q = q.column(column)
                 q = q.group_by(column)

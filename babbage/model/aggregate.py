@@ -19,10 +19,10 @@ class Aggregate(Concept):
             return '%s.%s' % (self.measure.ref, self.function)
         return '_%s' % self.function
 
-    def bind_one(self, cube):
+    def bind(self, cube):
         """ When one column needs to match, use the key. """
         if self.measure:
-            table, column = self.measure.bind_one(cube)
+            table, column = self.measure.bind(cube)
         else:
             table, column = cube._fact_table, cube._fact_pk
         # apply the SQL aggregation function:

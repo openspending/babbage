@@ -31,17 +31,12 @@ class Concept(object):
                                    table=table_name, column=column_name)
         return table, table.columns[column_name]
 
-    def bind_one(self, cube):
+    def bind(self, cube):
         """ Map a model reference to an physical column in the database. """
         table, column = self._physical_column(cube, self.column_name)
         column = column.label(self.ref)
         column.quote = True
         return table, column
-
-    def bind_many(self, cube):
-        """ In the special case of projecting a dimension, we want to get all
-        matching columns (i.e. all attributes). """
-        return [self.bind_one(cube)]
 
     def __eq__(self, other):
         """ Test concept equality by means of references. """

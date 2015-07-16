@@ -22,7 +22,7 @@ class Cuts(Parser):
         the form (ref, operator, value), or as a string in query form. If it
         is ``None``, no filter will be applied. """
         for (ref, operator, value) in self.parse(cuts):
-            table, column = self.cube.model[ref].bind_one(self.cube)
+            table, column = self.cube.model[ref].bind(self.cube)
             q = self.ensure_table(q, table)
             q = q.where(column == value)
         return q
