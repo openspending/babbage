@@ -1,7 +1,7 @@
 from sqlalchemy import and_, func
-from sqlalchemy.sql.expression import select, ClauseList
+from sqlalchemy.sql.expression import select
 
-from babbage.parser import CutsParser, DrilldownsParser, OrdersParser
+from babbage.parser import CutsParser, DrilldownsParser, OrderingParser
 from babbage.parser import FieldsParser, AggregatesParser
 from babbage.util import parse_int
 
@@ -83,10 +83,10 @@ class Query(object):
         self._limit = max(0, min(page_max, page_size))
         self._offset = (max(1, parse_int(page)) - 1) * self._limit
 
-    def order(self, orders):
+    def order(self, ordering):
         """ Sort on a set of field specifications of the type (ref, direction)
         in order of the submitted list. """
-        for (ref, direction) in OrdersParser(self.cube).parse(orders):
+        for (ref, direction) in OrderingParser(self.cube).parse(ordering):
             table, column = self.cube.model[ref].bind_one(self.cube)
             column = column.asc() if direction == 'asc' else column.desc()
             column = column.nullslast()

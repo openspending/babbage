@@ -96,10 +96,10 @@ class AggregatesParser(Parser):
         self.results.append(ast)
 
 
-class OrdersParser(Parser):
+class OrderingParser(Parser):
     """ Handle parser output for sorting specifications, a tuple of a ref
     and a direction (which is 'asc' if unspecified). """
-    start = "orders"
+    start = "ordering"
 
     def order(self, ast):
         if isinstance(ast, six.string_types):

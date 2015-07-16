@@ -2,7 +2,7 @@
 Description of the cuts/drilldown/ordering query structure.
 *)
 
-all = cuts | drilldowns | fields | orders ;
+all = cuts | drilldowns | fields | ordering ;
 
 cuts = cut { '|' cut } ;
 cut = ref ':' value ;
@@ -16,7 +16,7 @@ field = ref ;
 aggregates = aggregate { '|' aggregate } ;
 aggregate = ref ;
 
-orders = order { ',' order } ;
+ordering = order { ',' order } ;
 order = ref [ ':' direction ] ;
 direction = 'asc' | 'desc' ;
 

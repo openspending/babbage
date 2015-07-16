@@ -77,7 +77,7 @@ class Cube(object):
         }
 
     def facts(self, refs=None, cuts=None, order=None, page=None,
-        page_size=None):
+              page_size=None):
         """ List all facts in the cube, returning only the specified references
         if these are specified. """
         query = Query(self)

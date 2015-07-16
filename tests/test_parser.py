@@ -5,7 +5,8 @@ from .util import TestCase, load_json_fixture
 
 from babbage.exc import QueryException
 from babbage.cube import Cube
-from babbage.parser import CutsParser, OrdersParser, DrilldownsParser
+from babbage.parser import CutsParser, OrderingParser
+from babbage.parser import AggregatesParser, DrilldownsParser
 
 
 class ParserTestCase(TestCase):
@@ -50,13 +51,13 @@ class ParserTestCase(TestCase):
         assert not len(cuts)
 
     def test_order(self):
-        cuts = OrdersParser(self.cube).parse('foo:desc,bar')
+        cuts = OrderingParser(self.cube).parse('foo:desc,bar')
         assert cuts[0][1] == "desc", cuts
         assert cuts[1][1] == "asc", cuts
 
     @raises(QueryException)
     def test_order_invalid(self):
-        OrdersParser(self.cube).parse('fooxx:desc')
+        OrderingParser(self.cube).parse('fooxx:desc')
 
     def test_drilldowns(self):
         dd = DrilldownsParser(self.cube).parse('foo|bar')
@@ -65,3 +66,17 @@ class ParserTestCase(TestCase):
     @raises(QueryException)
     def test_drilldowns_invalid(self):
         DrilldownsParser(self.cube).parse('amount')
+
+    @raises(QueryException)
+    def test_aggregates_invalid(self):
+        AggregatesParser(self.cube).parse('amount')
+
+    @raises(QueryException)
+    def test_aggregates_dimension(self):
+        AggregatesParser(self.cube).parse('cofog1.name')
+
+    def test_aggregates(self):
+        agg = AggregatesParser(self.cube).parse('amount.sum')
+        assert len(agg) == 1
+        agg = AggregatesParser(self.cube).parse('amount.sum|_count')
+        assert len(agg) == 2
