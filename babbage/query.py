@@ -18,7 +18,6 @@ class Query(object):
         self._limit = 10000
         self._offset = 0
         self._orders = []
-        self._aggregated = False
         self.distinct = distinct
 
     def cut(self, cuts):
@@ -52,7 +51,6 @@ class Query(object):
 
     def aggregate(self, aggregates):
         """ Define a set of fields to perform aggregation on. """
-        self._aggregated = True
         aggregates = AggregatesParser(self.cube).parse(aggregates)
         for aggregate in aggregates:
             table, column = self.cube.model[aggregate].bind_one(self.cube)
