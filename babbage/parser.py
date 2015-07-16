@@ -86,7 +86,7 @@ class Fields(Parser):
 
 
 class Aggregates(Parser):
-    """ Handle parser output for field specifications. """
+    """ Handle parser output for aggregate/drilldown specifications. """
     start = "aggregates"
 
     def aggregate(self, ast):

@@ -4,7 +4,7 @@ from .util import TestCase, load_json_fixture, load_csv
 
 from babbage.exc import QueryException
 from babbage.cube import Cube
-from babbage.query import Query
+from babbage.old_query import Query
 
 
 class QueryTestCase(TestCase):

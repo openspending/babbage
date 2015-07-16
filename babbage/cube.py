@@ -2,9 +2,8 @@ from sqlalchemy import MetaData
 from sqlalchemy.schema import Table
 
 from babbage.model import Model
-from babbage.query import Query
+from babbage.old_query import Query
 from babbage.exc import BindingException
-from babbage.model.dimension import Dimension
 
 
 class Cube(object):
