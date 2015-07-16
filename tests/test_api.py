@@ -5,7 +5,7 @@ from babbage.manager import JSONCubeManager
 from babbage.api import configure_api
 
 
-from .util import TestCase, FIXTURE_PATH
+from .util import TestCase, FIXTURE_PATH, load_csv
 
 
 class CubeManagerTestCase(TestCase):
@@ -14,6 +14,7 @@ class CubeManagerTestCase(TestCase):
         super(CubeManagerTestCase, self).setUp()
         path = os.path.join(FIXTURE_PATH, 'models')
         self.mgr = JSONCubeManager(self.engine, path)
+        self.cra_table = load_csv('cra.csv')
         configure_api(self.app, self.mgr)
 
     def test_index(self):

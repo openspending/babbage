@@ -74,10 +74,11 @@ def handle_error(exc):
 @blueprint.route('/')
 def index():
     """ General system status report :) """
-    from babbage import __version__
+    from babbage import __version__, __doc__
     return jsonify({
         'status': 'ok',
         'api': 'babbage',
+        'message': __doc__,
         'cubes_index_url': url('babbage_api.cubes'),
         'version': __version__
     })

@@ -104,9 +104,8 @@ class TestCase(FlaskTestCase):
         return app
 
     def setUp(self):
-        # drop_tables()
+        drop_tables()
         self.engine = engine
 
     def tearDown(self):
-        pass
-        # drop_tables()
+        drop_tables()
