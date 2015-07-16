@@ -50,19 +50,25 @@ class Cube(object):
         aggregates, grouped by a given set of drilldown dimensions (i.e.
         dividers). The query can also be filtered and sorted. """
         q = select(distinct=True)
-        q = Cuts(self).apply(q, cuts)
-        q = Aggregates(self).apply(q, aggregates)
+        cuts, q = Cuts(self).apply(q, cuts)
+        aggregates, q = Aggregates(self).apply(q, aggregates)
         summary = first_result(self, q)
 
-        q = Drilldowns(self).apply(q, drilldowns)
+        attributes, q = Drilldowns(self).apply(q, drilldowns)
         count = count_results(self, q)
 
-        q = Pagination(self).apply(q, page, page_size)
-        q = Ordering(self).apply(q, order)
+        page, q = Pagination(self).apply(q, page, page_size)
+        ordering, q = Ordering(self).apply(q, order)
         return {
             'total_cell_count': count,
             'cells': list(generate_results(self, q)),
-            'summary': summary
+            'summary': summary,
+            'cell': cuts,
+            'aggregates': aggregates,
+            'attributes': attributes,
+            'order': ordering,
+            'page': page['page'],
+            'page_size': page['page_size']
         }
 
     def members(self, ref, cuts=None, order=None, page=None, page_size=None):
@@ -70,15 +76,20 @@ class Cube(object):
         paginated. If the reference describes a dimension, all attributes are
         returned. """
         q = select(distinct=True)
-        q = Cuts(self).apply(q, cuts)
-        q = Fields(self).apply(q, ref)
-        q = Ordering(self).apply(q, order)
+        cuts, q = Cuts(self).apply(q, cuts)
+        fields, q = Fields(self).apply(q, ref)
+        ordering, q = Ordering(self).apply(q, order)
         count = count_results(self, q)
 
-        q = Pagination(self).apply(q, page, page_size)
+        page, q = Pagination(self).apply(q, page, page_size)
         return {
             'total_member_count': count,
-            'data': list(generate_results(self, q))
+            'data': list(generate_results(self, q)),
+            'cell': cuts,
+            'fields': fields,
+            'order': ordering,
+            'page': page['page'],
+            'page_size': page['page_size']
         }
 
     def facts(self, refs=None, cuts=None, order=None, page=None,
@@ -86,15 +97,20 @@ class Cube(object):
         """ List all facts in the cube, returning only the specified references
         if these are specified. """
         q = select()
-        q = Cuts(self).apply(q, cuts)
-        q = Fields(self).apply(q, refs)
+        cuts, q = Cuts(self).apply(q, cuts)
+        fields, q = Fields(self).apply(q, refs)
         count = count_results(self, q)
 
-        q = Ordering(self).apply(q, order)
-        q = Pagination(self).apply(q, page, page_size)
+        ordering, q = Ordering(self).apply(q, order)
+        page, q = Pagination(self).apply(q, page, page_size)
         return {
             'total_fact_count': count,
-            'data': list(generate_results(self, q))
+            'data': list(generate_results(self, q)),
+            'cell': cuts,
+            'fields': fields,
+            'order': ordering,
+            'page': page['page'],
+            'page_size': page['page_size']
         }
 
     def __repr__(self):

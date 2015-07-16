@@ -13,9 +13,9 @@ class Aggregates(Parser):
         self.results.append(ast)
 
     def apply(self, q, aggregates):
-        self.info['aggregates'] = []
+        info = []
         for aggregate in self.parse(aggregates):
-            self.info['aggregates'].append(aggregate)
+            info.append(aggregate)
             table, column = self.cube.model[aggregate].bind(self.cube)
             q = self.ensure_table(q, table)
             q = q.column(column)
@@ -23,8 +23,8 @@ class Aggregates(Parser):
         if not len(self.results):
             # If no aggregates are specified, aggregate on all.
             for aggregate in self.cube.model.aggregates:
-                self.info['aggregates'].append(aggregate.ref)
+                info.append(aggregate.ref)
                 table, column = aggregate.bind(self.cube)
                 q = self.ensure_table(q, table)
                 q = q.column(column)
-        return q
+        return info, q

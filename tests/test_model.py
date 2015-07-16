@@ -22,6 +22,14 @@ class ModelTestCase(TestCase):
         concepts = list(self.simple_model.concepts)
         assert len(concepts) == 7, len(concepts)
 
+    def test_model_match(self):
+        concepts = list(self.simple_model.match('foo'))
+        assert len(concepts) == 1, len(concepts)
+
+    def test_model_match_invalid(self):
+        concepts = list(self.simple_model.match('fooxx'))
+        assert len(concepts) == 0, len(concepts)
+
     def test_model_aggregates(self):
         aggregates = list(self.simple_model.aggregates)
         assert len(aggregates) == 2, aggregates

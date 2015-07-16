@@ -21,7 +21,9 @@ class Ordering(Parser):
     def apply(self, q, ordering):
         """ Sort on a set of field specifications of the type (ref, direction)
         in order of the submitted list. """
+        info = []
         for (ref, direction) in self.parse(ordering):
+            info.append((ref, direction))
             table, column = self.cube.model[ref].bind(self.cube)
             column = column.asc() if direction == 'asc' else column.desc()
             q = self.ensure_table(q, table)
@@ -30,4 +32,4 @@ class Ordering(Parser):
         if not len(self.results):
             for column in q.columns:
                 q = q.order_by(column.asc().nullslast())
-        return q
+        return info, q

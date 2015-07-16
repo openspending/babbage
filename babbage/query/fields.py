@@ -16,17 +16,20 @@ class Fields(Parser):
 
     def apply(self, q, fields):
         """ Define a set of fields to return for a non-aggregated query. """
+        info = []
         for field in self.parse(fields):
             for concept in self.cube.model.match(field):
+                info.append(concept.ref)
                 table, column = concept.bind(self.cube)
                 q = self.ensure_table(q, table)
                 q = q.column(column)
 
         if not len(self.results):
             # If no fields are requested, return all available fields.
-            for c in list(self.cube.model.attributes) + \
+            for concept in list(self.cube.model.attributes) + \
                     list(self.cube.model.measures):
-                table, column = c.bind(self.cube)
+                info.append(concept.ref)
+                table, column = concept.bind(self.cube)
                 q = self.ensure_table(q, table)
                 q = q.column(column)
-        return q
+        return info, q

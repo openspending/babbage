@@ -21,8 +21,10 @@ class Cuts(Parser):
         """ Apply a set of filters, which can be given as a set of tuples in
         the form (ref, operator, value), or as a string in query form. If it
         is ``None``, no filter will be applied. """
+        info = []
         for (ref, operator, value) in self.parse(cuts):
+            info.append({'ref': ref, 'operator': operator, 'value': value})
             table, column = self.cube.model[ref].bind(self.cube)
             q = self.ensure_table(q, table)
             q = q.where(column == value)
-        return q
+        return info, q

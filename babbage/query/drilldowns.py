@@ -15,10 +15,12 @@ class Drilldowns(Parser):
 
     def apply(self, q, drilldowns):
         """ Apply a set of grouping criteria and project them. """
+        info = []
         for drilldown in self.parse(drilldowns):
             for attribute in self.cube.model.match(drilldown):
+                info.append(attribute.ref)
                 table, column = attribute.bind(self.cube)
                 q = self.ensure_table(q, table)
                 q = q.column(column)
                 q = q.group_by(column)
-        return q
+        return info, q

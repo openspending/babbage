@@ -97,8 +97,12 @@ class CubeTestCase(TestCase):
     def test_members_paginate(self):
         members = self.cube.members('cofog1', page_size=2)
         assert members['total_member_count'] == 4, members['total_member_count']
+        assert members['page'] == 1, members
+        assert members['page_size'] == 2, members
         assert len(members['data']) == 2, len(members['data'])
         members2 = self.cube.members('cofog1', page_size=2, page=2)
+        assert members2['page'] == 2, members2
+        assert members2['page_size'] == 2, members2
         assert members2['data'] != members['data'], members2['data']
 
     def test_aggregate_basic(self):
