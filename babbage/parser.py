@@ -46,7 +46,7 @@ class Parser(object):
         return text
 
 
-class CutsParser(Parser):
+class Cuts(Parser):
     """ Handle parser output for cuts. """
     start = "cuts"
 
@@ -60,7 +60,7 @@ class CutsParser(Parser):
         self.results.append((ast[0], ast[1], value))
 
 
-class DrilldownsParser(Parser):
+class Drilldowns(Parser):
     """ Handle parser output for drilldowns. """
     start = "drilldowns"
 
@@ -72,7 +72,7 @@ class DrilldownsParser(Parser):
         self.results.append(ast)
 
 
-class FieldsParser(Parser):
+class Fields(Parser):
     """ Handle parser output for field specifications. """
     start = "fields"
 
@@ -85,7 +85,7 @@ class FieldsParser(Parser):
         self.results.append(ast)
 
 
-class AggregatesParser(Parser):
+class Aggregates(Parser):
     """ Handle parser output for field specifications. """
     start = "aggregates"
 
@@ -96,7 +96,7 @@ class AggregatesParser(Parser):
         self.results.append(ast)
 
 
-class OrderingParser(Parser):
+class Ordering(Parser):
     """ Handle parser output for sorting specifications, a tuple of a ref
     and a direction (which is 'asc' if unspecified). """
     start = "ordering"

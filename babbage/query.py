@@ -1,8 +1,7 @@
 from sqlalchemy import and_, func
 from sqlalchemy.sql.expression import select
 
-from babbage.parser import CutsParser, DrilldownsParser, OrderingParser
-from babbage.parser import FieldsParser, AggregatesParser
+from babbage.parser import Cuts, Drilldowns, Ordering, Fields, Aggregates
 from babbage.util import parse_int
 
 
@@ -24,14 +23,14 @@ class Query(object):
         """ Apply a set of filters, which can be given as a set of tuples in
         the form (ref, operator, value), or as a string in query form. If it
         is ``None``, no filter will be applied. """
-        for (ref, operator, value) in CutsParser(self.cube).parse(cuts):
+        for (ref, operator, value) in Cuts(self.cube).parse(cuts):
             table, column = self.cube.model[ref].bind_one(self.cube)
             self._tables.add(table)
             self._cuts.append(column == value)
 
     def project(self, fields):
         """ Define a set of fields to return for a non-aggregated query. """
-        for field in FieldsParser(self.cube).parse(fields):
+        for field in Fields(self.cube).parse(fields):
             self.order(field)
             columns = self.cube.model[field].bind_many(self.cube)
             self._tables.update([t for t, c in columns])
@@ -51,7 +50,7 @@ class Query(object):
 
     def aggregate(self, aggregates):
         """ Define a set of fields to perform aggregation on. """
-        aggregates = AggregatesParser(self.cube).parse(aggregates)
+        aggregates = Aggregates(self.cube).parse(aggregates)
         for aggregate in aggregates:
             table, column = self.cube.model[aggregate].bind_one(self.cube)
             self._tables.add(table)
@@ -66,7 +65,7 @@ class Query(object):
 
     def drilldown(self, drilldowns):
         """ Apply a set of grouping criteria and project them. """
-        for drilldown in DrilldownsParser(self.cube).parse(drilldowns):
+        for drilldown in Drilldowns(self.cube).parse(drilldowns):
             self.order(drilldown)
             drilldown = self.cube.model[drilldown]
             columns = drilldown.bind_many(self.cube)
@@ -86,7 +85,7 @@ class Query(object):
     def order(self, ordering):
         """ Sort on a set of field specifications of the type (ref, direction)
         in order of the submitted list. """
-        for (ref, direction) in OrderingParser(self.cube).parse(ordering):
+        for (ref, direction) in Ordering(self.cube).parse(ordering):
             table, column = self.cube.model[ref].bind_one(self.cube)
             column = column.asc() if direction == 'asc' else column.desc()
             column = column.nullslast()
