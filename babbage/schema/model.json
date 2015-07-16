@@ -10,7 +10,6 @@
         "joins": {"type": "array"}
     },
     "required": ["measures", "dimensions", "fact_table"],
-    "additionalProperties": false,
     "definitions": {
         "label": {
             "type": "string",

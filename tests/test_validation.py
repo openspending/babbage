@@ -28,12 +28,6 @@ class ValidationTestCase(TestCase):
         validate_model(model)
 
     @raises(ValidationError)
-    def test_invalid_base_key(self):
-        model = self.simple_model.copy()
-        model['foo'] = 'bar'
-        validate_model(model)
-
-    @raises(ValidationError)
     def test_invalid_dimension_name(self):
         model = self.simple_model.copy()
         model['dimensions']['goo fdj.'] = {'label': 'bar'}
