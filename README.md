@@ -1,7 +1,7 @@
 # Babbage Analytical Engine
 
-[![Build Status](https://travis-ci.org/pudo/babbage.svg?branch=master)](https://travis-ci.org/pudo/babbage)
-[![Coverage Status](https://coveralls.io/repos/pudo/babbage/badge.svg?branch=master&service=github)](https://coveralls.io/github/pudo/babbage?branch=master)
+[![Build Status](https://travis-ci.org/spendb/babbage.svg?branch=master)](https://travis-ci.org/pudo/babbage)
+[![Coverage Status](https://coveralls.io/repos/spendb/babbage/badge.svg?branch=master&service=github)](https://coveralls.io/github/spendb/babbage?branch=master)
 
 
 ``babbage`` is a lightweight implementation of an OLAP-style database
