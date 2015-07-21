@@ -15,7 +15,6 @@ class Model(object):
         This is called upon initialization and deserialization of
         the dataset from the SQLAlchemy store.
         """
-        validate_model(spec)
         self.spec = spec
 
     @property

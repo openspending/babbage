@@ -25,12 +25,12 @@
         "column": {
             "type": "string",
             "minLength": 2,
-            "maxLength": 20
+            "maxLength": 250
         },
         "table": {
             "type": "string",
             "minLength": 2,
-            "maxLength": 20,
+            "maxLength": 250,
             "pattern": "^[a-zA-Z][a-zA-Z0-9_\\-]*[a-zA-Z0-9]$"
         },
         "dimensions": {

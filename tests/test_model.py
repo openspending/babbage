@@ -1,6 +1,3 @@
-from nose.tools import raises
-from jsonschema import ValidationError
-
 from .util import TestCase, load_json_fixture
 from babbage.model import Model
 
@@ -11,12 +8,6 @@ class ModelTestCase(TestCase):
         super(ModelTestCase, self).setUp()
         self.simple_model_data = load_json_fixture('models/simple_model.json')
         self.simple_model = Model(self.simple_model_data)
-
-    @raises(ValidationError)
-    def test_model_invalid(self):
-        data = self.simple_model_data.copy()
-        del data['measures']
-        Model(data)
 
     def test_model_concepts(self):
         concepts = list(self.simple_model.concepts)

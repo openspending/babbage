@@ -9,7 +9,7 @@ class Aggregate(Concept):
     cube. """
 
     def __init__(self, model, label, function, measure=None):
-        super(Aggregate, self).__init__(model, None, {label: label})
+        super(Aggregate, self).__init__(model, None, {'label': label})
         self.function = function
         self.measure = measure
 
