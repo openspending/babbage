@@ -27,9 +27,14 @@ class Ordering(Parser):
             table, column = self.cube.model[ref].bind(self.cube)
             column = column.asc() if direction == 'asc' else column.desc()
             q = self.ensure_table(q, table)
-            q = q.order_by(column.nullslast())
+            if self.cube.is_postgresql:
+                column = column.nullslast()
+            q = q.order_by(column)
 
         if not len(self.results):
             for column in q.columns:
-                q = q.order_by(column.asc().nullslast())
+                column = column.asc()
+                if self.cube.is_postgresql:
+                    column = column.nullslast()
+                q = q.order_by(column)
         return info, q

@@ -49,6 +49,11 @@ class Cube(object):
             return self._fact_table
         return self._load_table(self.model.fact_table_name)
 
+    @property
+    def is_postgresql(self):
+        """ Enable postgresql-specific extensions. """
+        return 'postgresql' == self.engine.dialect.name
+
     def aggregate(self, aggregates=None, drilldowns=None, cuts=None,
                   order=None, page=None, page_size=None):
         """ Main aggregation function. This is used to compute a given set of

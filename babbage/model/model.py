@@ -1,4 +1,3 @@
-from babbage.validation import validate_model
 from babbage.model.dimension import Dimension
 from babbage.model.measure import Measure
 from babbage.model.aggregate import Aggregate
