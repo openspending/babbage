@@ -20,6 +20,7 @@ class CubeTestCase(TestCase):
     def test_table_load(self):
         table = self.cube._load_table(self.cra_table.name)
         assert table is not None
+        assert 'cra' in repr(self.cube)
 
     def test_table_pk(self):
         assert self.cube.fact_pk is not None
@@ -127,3 +128,12 @@ class CubeTestCase(TestCase):
         aggs = self.cube.aggregate(drilldowns='cofog1', page_size=0)
         assert aggs['total_cell_count'] == 4, aggs['total_member_count']
         assert len(aggs['cells']) == 0, len(aggs['data'])
+
+    def test_compute_cardinalities(self):
+        cofog = self.cube.model['cofog1']
+        assert cofog.cardinality is None
+        assert cofog.cardinality_class is None
+        self.cube.compute_cardinalities()
+        assert cofog.cardinality == 4, cofog.cardinality
+        assert cofog.cardinality_class == 'tiny', \
+            (cofog.cardinality, cofog.cardinality_class)

@@ -118,5 +118,13 @@ class Cube(object):
             'page_size': page['page_size']
         }
 
+    def compute_cardinalities(self):
+        """ This will count the number of distinct values for each dimension in
+        the dataset and add that count to the model so that it can be used as a
+        hint by UI components. """
+        for dimension in self.model.dimensions:
+            result = self.members(dimension.ref, page_size=0)
+            dimension.spec['cardinality'] = result.get('total_member_count')
+
     def __repr__(self):
         return '<Cube(%r)' % self.name
