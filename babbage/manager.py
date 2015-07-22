@@ -28,7 +28,6 @@ class CubeManager(object):
         a boolean. """
         pass
 
-    @abstractmethod
     def get_cube_model(self, name):  # pragma: no cover
         """ Given a cube name, return the model specification (as a dict) for
         that cube. This can also return a ``Model`` instance. """
