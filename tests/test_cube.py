@@ -119,6 +119,7 @@ class CubeTestCase(TestCase):
         aggs = self.cube.aggregate(drilldowns='cofog1', aggregates='_count')
         assert aggs['total_cell_count'] == 4, aggs['total_member_count']
         assert len(aggs['cells']) == 4, len(aggs['data'])
+        assert '_count' in aggs['summary'], aggs['summary']
         row0 = aggs['cells'][0]
         assert 'cofog1.name' in row0, row0
         assert 'amount.sum' not in row0, row0

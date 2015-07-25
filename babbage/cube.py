@@ -45,7 +45,7 @@ class Cube(object):
 
     @property
     def fact_table(self):
-        if self._fact_table:
+        if self._fact_table is not None:
             return self._fact_table
         return self._load_table(self.model.fact_table_name)
 
@@ -59,7 +59,7 @@ class Cube(object):
         """ Main aggregation function. This is used to compute a given set of
         aggregates, grouped by a given set of drilldown dimensions (i.e.
         dividers). The query can also be filtered and sorted. """
-        q = select(distinct=True)
+        q = select()
         cuts, q = Cuts(self).apply(q, cuts)
         aggregates, q = Aggregates(self).apply(q, aggregates)
         summary = first_result(self, q)

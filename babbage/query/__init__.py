@@ -18,7 +18,7 @@ def count_results(cube, q):
 def generate_results(cube, q):
     """ Generate the resulting records for this query, applying pagination.
     Values will be returned by their reference. """
-    if q._limit < 1:
+    if q._limit is not None and q._limit < 1:
         return
     rp = cube.engine.execute(q)
     while True:

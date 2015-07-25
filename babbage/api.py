@@ -1,6 +1,7 @@
 # Flask web api
 # TODO: consider making this it's own Python package?
 from datetime import date
+from decimal import Decimal
 
 from werkzeug.exceptions import NotFound
 from flask import Blueprint, Response, request, current_app, json, url_for
@@ -40,6 +41,8 @@ class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, date):
             return obj.isoformat()
+        if isinstance(obj, Decimal):
+            return float(obj)
         if isinstance(obj, set):
             return [o for o in obj]
         if hasattr(obj, 'to_dict'):
