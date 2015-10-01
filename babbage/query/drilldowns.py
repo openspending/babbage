@@ -11,7 +11,8 @@ class Drilldowns(Parser):
                [a.ref for a in self.cube.model.attributes]
         if ast not in refs:
             raise QueryException('Invalid drilldown: %r' % ast)
-        self.results.append(ast)
+        if ast not in self.results:
+            self.results.append(ast)
 
     def apply(self, q, drilldowns):
         """ Apply a set of grouping criteria and project them. """
