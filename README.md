@@ -1,8 +1,7 @@
 # Babbage Analytical Engine
 
-[![Build Status](https://travis-ci.org/spendb/babbage.svg?branch=master)](https://travis-ci.org/spendb/babbage)
-[![Coverage Status](https://coveralls.io/repos/spendb/babbage/badge.svg?branch=master&service=github)](https://coveralls.io/github/spendb/babbage?branch=master)
-
+[![Build Status](https://travis-ci.org/openspending/babbage.svg?branch=master)](https://travis-ci.org/spendb/babbage)
+[![Coverage Status](https://coveralls.io/repos/openspending/babbage/badge.svg?branch=master&service=github)](https://coveralls.io/github/openspending/babbage?branch=master)
 
 ``babbage`` is a lightweight implementation of an OLAP-style database
 query tool for PostgreSQL. Given a database schema and a logical model
@@ -33,4 +32,85 @@ $ git clone https://github.com/spendb/babbage.git
 $ cd babbage
 $ make install
 $ make test
+```
+
+## Usage
+
+``babbage`` is used to query a set of existing database tables, using an 
+abstract, logical model to query them. A sample of a logical model can be
+found in ``tests/fixtures/models/cra.json``, and a JSON schema specifying
+the model is available in ``babbage/schema/model.json``.
+
+The central unit of ``babbage`` is a ``Cube``, i.e. a [OLAP cube](https://en.wikipedia.org/wiki/OLAP_cube) that uses the provided model metadata to construct queries 
+against a database table. Additionally, the application supports managing
+multiple cubes at the same time via a ``CubeManager``, which can be
+subclassed to enable application-specific ways of defining cubes and where
+their metadata is stored.
+
+Futher, ``babbage`` includes a Flask Blueprint that can be used to expose
+a standard API via HTTP. This API is consumed by the JavaScript ``babbage.ui``
+package and it is very closely modelled on the Cubes and OpenSpending HTTP
+APIs.
+
+### Programmatic usage
+
+Let's assume you have an existing database table of procurement data and
+want to query it using ``babbage`` in a Python shell. A session might look
+like this:
+
+```python
+import json
+from sqlalchemy import create_engine
+from babbage.cube import Cube
+from babbage.model import Measure
+
+engine = create_engine('postgresql://localhost/procurement')
+model = json.load(open('procurement_model.json', 'r'))
+
+cube = Cube(engine, 'procurement', model)
+facts = cube.facts(page_size=5)
+
+# There are 17201 rows in the table:
+assert facts['total_fact_count'] == 17201
+
+# There's a field called 'total_value':
+assert 'total_value' in facts['fields']
+
+# We can get metadata about it:
+concept = cube.model['total_value']
+assert isinstance(concept, Measure)
+assert concept.label == 'Total Value'
+
+# And there's some actual data:
+assert len(facts['data']) == 5
+fact_0 = facts['data'][0]
+assert 'total_value' in fact_0
+
+# For dimensions, we can get all the distinct values:
+members = cube.members('supplier', cut='year:2015', page_size=500)
+assert len(members['data']) <= 500
+assert members['total_member_count']
+
+# And, finally, we can aggregate by specific dimensions:
+aggregate = cube.aggregate(aggregates='total_value.sum',
+                           drilldowns='supplier|authority'
+                           cut='year:2015|authority.country:GB',
+                           page_size=500)
+# This translates to: 
+#   Aggregate the procurement data by summing up the 'total_value'
+#   for each unique pair of values in the 'supplier' and 'authority'
+#   dimensions, and filter for only those entries where the 'year'
+#   dimensions key attribute is '2015' and the 'authority' dimensions
+#   'country' attribute is 'GB'. Return the first 500 results.
+assert aggregate['total_cell_count']
+assert len(aggregate['cells']) <= 500
+aggregate_0 = aggregate['cells'][0]
+assert 'total_value.sum' in aggregate_0
+
+# Note that these attribute names are made up for this example, they
+# should be reflected from the model:
+assert 'supplier.code' in aggregate_0
+assert 'supplier.label' in aggregate_0
+assert 'authority.code' in aggregate_0
+assert 'authority.label' in aggregate_0
 ```
