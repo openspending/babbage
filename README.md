@@ -114,3 +114,51 @@ assert 'supplier.label' in aggregate_0
 assert 'authority.code' in aggregate_0
 assert 'authority.label' in aggregate_0
 ```
+
+### Using the HTTP API
+
+The HTTP API for ``babbage`` is a simple Flask [Blueprint](http://flask.pocoo.org/docs/latest/blueprints/) used to expose a small set of calls that correspond to
+the cube functions listed above. To include it into an existing Flask
+application, you would need to create a ``CubeManager`` and then
+configure the API like this: 
+
+```python
+from flask import Flask
+from sqlalchemy import create_engine
+from babbage.manager import JSONCubeManager
+from babbage.api import configure_api
+
+app = Flask('demo')
+engine = 
+models_directory = 'models/'
+manager = JSONCubeManager(engine, models_directory)
+blueprint = configure_api(app, manager)
+app.register_blueprint(blueprint, url_prefix='/api/babbage')
+
+app.run()
+```
+
+Of course, you can define your own ``CubeManager``, for example if
+you wish to retrieve model metadata from a database.
+
+When enabled, the API will expose a number of JSON(P) endpoints
+relative to the given ``url_prefix``:
+
+* ``/``, returns the system status and version.
+* ``/cubes``, returns a list of the available cubes (name only).
+* ``/cubes/<name>/model``, returns full metadata for a given 
+  cube (i.e. measures, dimensions, aggregates etc.)
+* ``/cubes/<name>/facts`` is used to return individual entries from
+  the cube in a non-aggregated form. Supports filters (``cut``), a
+  set of ``fields`` to return and a ``sort`` (``field_name:direction``),
+  as well as ``page`` and ``page_size``.
+* ``/cubes/<name>/members`` is used to return the distinct set of 
+  values for a given dimension, e.g. all the suppliers mentioned in
+  a procurement dataset. Supports filters (``cut``), a and a ``sort``
+  (``field_name:direction``), as well as ``page`` and ``page_size``.
+* ``/cubes/<name>/aggregate`` is the main endpoint for generating 
+  aggregate views of the data. Supports specifying the ``aggregates``
+  to include, the ``drilldowns`` to aggregate by, a set of filters
+  (``cut``), a and a ``sort`` (``field_name:direction``), as well
+  as ``page`` and ``page_size``.
+ 
