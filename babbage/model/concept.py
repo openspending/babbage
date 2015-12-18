@@ -27,8 +27,9 @@ class Concept(object):
             table_name, column_name = column_name.split('.', 1)
         table = cube._load_table(table_name)
         if column_name not in table.columns:
-            raise BindingException('Column does not exist: %r' % column_name,
-                                   table=table_name, column=column_name)
+            raise BindingException('Column %r does not exist on table %r' % (
+                                   column_name, table_name), table=table_name,
+                                   column=column_name)
         return table, table.columns[column_name]
 
     def bind(self, cube):
