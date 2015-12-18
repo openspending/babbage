@@ -38,7 +38,7 @@ class Cube(object):
         fact table counting. """
         keys = [c for c in self.fact_table.columns if c.primary_key]
         if len(keys) != 1:
-            raise BindingException('Fact table has no single OK: %r' %
+            raise BindingException('Fact table has no single PK: %r' %
                                    self.model.fact_table_name,
                                    table=self.model.fact_table_name)
         return keys[0]
