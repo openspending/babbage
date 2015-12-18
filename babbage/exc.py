@@ -6,6 +6,7 @@ class BabbageException(Exception):
     def __init__(self, message, **context):
         self.message = message
         self.context = context
+        super(BabbageException, self).__init__(message)
 
 
 class BindingException(BabbageException):
