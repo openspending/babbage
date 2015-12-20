@@ -1,4 +1,5 @@
 from babbage.model.dimension import Dimension
+from babbage.model.hierarchy import Hierarchy
 from babbage.model.measure import Measure
 from babbage.model.aggregate import Aggregate
 
@@ -22,13 +23,22 @@ class Model(object):
 
     @property
     def dimensions(self):
+        hierarchy_map = {}
+        for h in self.hierarchies:
+            for l in h.levels:
+                hierarchy_map[l] = h.name
         for name, data in self.spec.get('dimensions', {}).items():
-            yield Dimension(self, name, data)
+            yield Dimension(self, name, data, hierarchy_map.get(name))
 
     @property
     def measures(self):
         for name, data in self.spec.get('measures', {}).items():
             yield Measure(self, name, data)
+
+    @property
+    def hierarchies(self):
+        for name, data in self.spec.get('hierarchies', {}).items():
+            yield Hierarchy(name, data)
 
     @property
     def attributes(self):
@@ -99,4 +109,5 @@ class Model(object):
         data['measures'] = {m.name: m.to_dict() for m in self.measures}
         data['dimensions'] = {d.name: d.to_dict() for d in self.dimensions}
         data['aggregates'] = {a.ref: a.to_dict() for a in self.aggregates}
+        data['hierarchies'] = {h.name: h.to_dict() for h in self.hierarchies}
         return data

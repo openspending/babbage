@@ -7,8 +7,9 @@ class Dimension(Concept):
     it beyond its purely numeric ``Measures``. It is defined by several
     attributes, which contain actual values. """
 
-    def __init__(self, model, name, spec):
+    def __init__(self, model, name, spec, hierarchy=None):
         super(Dimension, self).__init__(model, name, spec)
+        self.hierarchy = hierarchy if hierarchy is not None else self.name
 
     @property
     def attributes(self):
@@ -64,4 +65,5 @@ class Dimension(Concept):
         data['key_ref'] = self.key_attribute.ref
         data['cardinality_class'] = self.cardinality_class
         data['attributes'] = {a.name: a.to_dict() for a in self.attributes}
+        data['hierarchy'] = self.hierarchy
         return data

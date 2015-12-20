@@ -12,7 +12,7 @@ class Attribute(Concept):
 
     @property
     def ref(self):
-        return '%s.%s' % (self.dimension.name, self.name)
+        return '%s.%s' % (self.dimension.hierarchy, self.name)
 
     def __repr__(self):
         return "<Attribute(%s)>" % self.ref

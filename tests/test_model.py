@@ -11,7 +11,7 @@ class ModelTestCase(TestCase):
 
     def test_model_concepts(self):
         concepts = list(self.simple_model.concepts)
-        assert len(concepts) == 7, len(concepts)
+        assert len(concepts) == 11, len(concepts)
 
     def test_model_match(self):
         concepts = list(self.simple_model.match('foo'))
@@ -28,6 +28,16 @@ class ModelTestCase(TestCase):
     def test_model_fact_table(self):
         assert self.simple_model.fact_table_name == 'simple'
         assert 'simple' in repr(self.simple_model), repr(self.simple_model)
+
+    def test_model_hierarchies(self):
+        hierarchies = list(self.simple_model.hierarchies)
+        assert len(hierarchies) == 1
+
+    def test_model_dimension_hierarchies(self):
+        bar = self.simple_model.match('bar')[0]
+        baz = self.simple_model.match('baz')[0]
+        assert bar.ref.startswith('bar.')
+        assert baz.ref.startswith('bazwaz.')
 
     def test_deref(self):
         assert self.simple_model['foo'].name == 'foo'
@@ -54,4 +64,5 @@ class ModelTestCase(TestCase):
         assert 'amount.sum' in data['aggregates']
         assert 'ref' in data['measures']['amount']
         assert 'dimensions' in data
+        assert 'hierarchies' in data
         assert 'foo' in data['dimensions']
