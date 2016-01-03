@@ -25,7 +25,7 @@ class CubeManagerTestCase(TestCase):
     def test_jsonp(self):
         res = self.client.get(url_for('babbage_api.index', callback='foo'))
         assert res.status_code == 200, res
-        assert res.data.startswith('foo && foo('), res.data
+        assert res.data.startswith(b'foo && foo('), res.data
 
     def test_list_cubes(self):
         res = self.client.get(url_for('babbage_api.cubes'))

@@ -68,5 +68,5 @@ class JSONCubeManager(CubeManager):
         if not self.has_cube(name):
             raise BabbageException('No such cube: %r' % name)
         file_name = os.path.join(self.directory, name + '.json')
-        with open(file_name, 'rb') as fh:
+        with open(file_name, 'r') as fh:
             return json.load(fh)

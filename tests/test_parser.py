@@ -34,7 +34,7 @@ class ParserTestCase(TestCase):
 
     def test_cuts_date(self):
         cuts = Cuts(self.cube).parse('foo:2015-01-04')
-        assert cuts[0][2] == date(2015, 01, 04), cuts
+        assert cuts[0][2] == date(2015, 1, 4), cuts
 
     @raises(QueryException)
     def test_cuts_invalid(self):

@@ -44,7 +44,7 @@ class ModelTestCase(TestCase):
         assert 'amount.sum' in repr(self.simple_model['amount.sum'])
         assert 'foo.key' in repr(self.simple_model['foo.key'])
         assert 'foo' in repr(self.simple_model['foo'])
-        assert 'foo' in unicode(self.simple_model['foo'])
+        assert 'foo' in str(self.simple_model['foo'])
         assert self.simple_model['foo'] == 'foo'
 
     def test_to_dict(self):

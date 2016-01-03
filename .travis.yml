@@ -15,8 +15,8 @@ install:
     - pip install python-dateutil coveralls unicodecsv
 before_script:
     - psql -c 'create database babbage;' -U postgres
-    - nosetests --version
+    - python -m nose --version
 script:
-    - nosetests --with-coverage --cover-package=babbage
+    - python -m nose --with-coverage --cover-package=babbage
 after_success:
     - coveralls

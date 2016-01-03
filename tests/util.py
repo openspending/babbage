@@ -26,7 +26,7 @@ TYPES = {
 
 def load_json_fixture(name):
     path = os.path.join(FIXTURE_PATH, name)
-    with open(path, 'rb') as fh:
+    with open(path, 'r') as fh:
         return json.load(fh)
 
 

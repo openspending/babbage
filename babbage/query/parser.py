@@ -11,7 +11,7 @@ from babbage.util import SCHEMA_PATH
 
 
 with open(os.path.join(SCHEMA_PATH, 'parser.ebnf'), 'rb') as fh:
-    grammar = fh.read()
+    grammar = fh.read().decode('utf8')
     model = grako.genmodel("all", grammar)
 
 
@@ -40,7 +40,7 @@ class Parser(object):
             try:
                 model.parse(text, start=self.start, semantics=self)
                 return self.results
-            except GrakoException, ge:
+            except GrakoException as ge:
                 raise QueryException(ge.message)
         elif text is None:
             text = []
