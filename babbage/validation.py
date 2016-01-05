@@ -19,6 +19,25 @@ def check_attribute_exists(instance):
         return False
     return True
 
+@checker.checks('valid_hierarchies')
+def check_valid_hierarchies(instance):
+    """ Additional check for the hierarchies model, to ensure that levels
+    given are pointing to actual dimensions """
+    hierarchies = instance.get('hierarchies', {}).values()
+    dimensions = set(instance.get('dimensions',{}).keys())
+    all_levels = set()
+    for hierarcy in hierarchies:
+        levels = set(hierarcy.get('levels',[]))
+        if len(all_levels.intersection(levels))>0:
+            # Dimension appears in two different hierarchies
+            return False
+        all_levels = all_levels.union(levels)
+        if not dimensions.issuperset(levels):
+            # Level which is not in a dimension
+            return False
+    return True
+
+
 
 def load_validator(name):
     """ Load the JSON Schema Draft 4 validator with the given name from the

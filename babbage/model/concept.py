@@ -5,18 +5,38 @@ class Concept(object):
     """ A concept describes any branch of the model: dimensions, attributes,
     measures. """
 
-    def __init__(self, model, name, spec):
+    def __init__(self, model, name, spec, alias=None):
         self.model = model
         self.name = name
+        self.alias = name if alias is None else alias
         self.spec = spec
         self.label = spec.get('label', name)
         self.description = spec.get('description')
         self.column_name = spec.get('column')
+        self._matched_ref = None
 
     @property
     def ref(self):
         """ A unique reference within the context of this model. """
         return self.name
+
+    @property
+    def refs(self):
+        """ Aliases for this model's ref. """
+        return [self.ref,self.alias]
+
+    @property
+    def matched_ref(self):
+        return self.ref if self._matched_ref is None else self._matched_ref
+
+    def match_ref(self,ref):
+        """ Check if the ref matches one the concept's aliases.
+            If so, mark the matched ref so that we use it as the column label.
+        """
+        if ref in self.refs:
+            self._matched_ref = ref
+            return True
+        return False
 
     def _physical_column(self, cube, column_name):
         """ Return the SQLAlchemy Column object matching a given, possibly
@@ -35,7 +55,7 @@ class Concept(object):
     def bind(self, cube):
         """ Map a model reference to an physical column in the database. """
         table, column = self._physical_column(cube, self.column_name)
-        column = column.label(self.ref)
+        column = column.label(self.matched_ref)
         column.quote = True
         return table, column
 

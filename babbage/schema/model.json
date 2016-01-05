@@ -2,11 +2,13 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Babbage Model",
     "type": "object",
+    "format": "valid_hierarchies",
 
     "properties": {
         "fact_table": {"$ref": "#/definitions/table"},
         "measures": {"$ref": "#/definitions/measures"},
         "dimensions": {"$ref": "#/definitions/dimensions"},
+        "hierarchies": {"$ref": "#/definitions/hierarchies"},
         "joins": {"type": "array"}
     },
     "required": ["measures", "dimensions", "fact_table"],
@@ -108,6 +110,32 @@
                 "column": {"$ref": "#/definitions/column"}
             },
             "required": ["label", "column"]
+        },
+        "hierarchies": {
+            "type": "object",
+            "patternProperties": {
+                "^[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]$": {
+                    "$ref": "#/definitions/hierarchy"
+                }
+            },
+            "additionalProperties": false
+        },
+        "hierarchy": {
+            "type": "object",
+            "properties": {
+                "label": {"$ref": "#/definitions/label"},
+                "levels": {"$ref": "#/definitions/levels"}
+            },
+            "required": ["levels"]
+        },
+        "levels": {
+            "type": "array",
+            "items": {"$ref": "#/definitions/level"},
+            "minItems": 1,
+            "uniqueItems": true
+        },
+        "level": {
+            "type": "string"
         }
     }
 }

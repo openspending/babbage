@@ -7,12 +7,12 @@ class Attribute(Concept):
     or introduced via a join. """
 
     def __init__(self, dimension, name, spec):
-        super(Attribute, self).__init__(dimension.model, name, spec)
+        super(Attribute, self).__init__(dimension.model, name, spec, '%s.%s' % (dimension.hierarchy, name))
         self.dimension = dimension
 
     @property
     def ref(self):
-        return '%s.%s' % (self.dimension.hierarchy, self.name)
+        return '%s.%s' % (self.dimension.name, self.name)
 
     def __repr__(self):
         return "<Attribute(%s)>" % self.ref

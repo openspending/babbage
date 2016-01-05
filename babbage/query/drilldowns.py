@@ -7,8 +7,8 @@ class Drilldowns(Parser):
     start = "drilldowns"
 
     def dimension(self, ast):
-        refs = [d.ref for d in self.cube.model.dimensions] + \
-               [a.ref for a in self.cube.model.attributes]
+        refs = Parser.allrefs(self.cube.model.dimensions,
+                              self.cube.model.attributes)
         if ast not in refs:
             raise QueryException('Invalid drilldown: %r' % ast)
         if ast not in self.results:

@@ -37,7 +37,7 @@ class ModelTestCase(TestCase):
         bar = self.simple_model.match('bar')[0]
         baz = self.simple_model.match('baz')[0]
         assert bar.ref.startswith('bar.')
-        assert baz.ref.startswith('bazwaz.')
+        assert baz.alias.startswith('bazwaz.')
 
     def test_deref(self):
         assert self.simple_model['foo'].name == 'foo'

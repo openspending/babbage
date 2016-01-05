@@ -50,3 +50,7 @@ class Parser(object):
         if table not in q.froms:
             q = q.select_from(table)
         return q
+
+    @staticmethod
+    def allrefs(*args):
+        return [ref for concept_list in args for concept in concept_list for ref in concept.refs]

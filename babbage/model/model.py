@@ -89,7 +89,7 @@ class Model(object):
     def __getitem__(self, ref):
         """ Access a ref (dimension, attribute or measure) by ref. """
         for concept in self.concepts:
-            if concept.ref == ref:
+            if concept.match_ref(ref):
                 return concept
         raise KeyError()
 
