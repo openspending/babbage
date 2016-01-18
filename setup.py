@@ -43,8 +43,8 @@ setup(
     tests_require=[
         'nose >= 1.3.7',
         'Flask-Testing >= 0.4.2',
-        'python-dateutil-2.4.2',
-        'unicodecsv-0.13.0'
+        'python-dateutil >= 2.4.2',
+        'unicodecsv >= 0.13.0'
     ],
     test_suite='tests',
     entry_points={}

@@ -15,12 +15,35 @@
             "attributes": {
                 "key": {"label": "Key", "column": "bar_key"}
             }
+        },
+        "baz": {
+            "label": "Baz",
+            "key_attribute": "key",
+            "attributes": {
+                "key": {"label": "Key", "column": "bar_key"}
+            }
+        },
+        "waz": {
+            "label": "Waz",
+            "key_attribute": "key",
+            "attributes": {
+                "key": {"label": "Key", "column": "bar_key"}
+            }
         }
+
     },
     "measures": {
         "amount": {
             "label": "Amount in USD",
             "column": "amount"
+        }
+    },
+    "hierarchies": {
+        "bazwaz": {
+            "label": "BazWaz",
+            "levels": [
+                "baz", "waz"
+            ]
         }
     }
 }
