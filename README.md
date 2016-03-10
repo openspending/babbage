@@ -1,5 +1,6 @@
 # Babbage Analytical Engine
 
+[![Gitter](https://img.shields.io/gitter/room/openspending/chat.svg)](https://gitter.im/openspending/chat)
 [![Build Status](https://travis-ci.org/openspending/babbage.svg?branch=master)](https://travis-ci.org/spendb/babbage)
 [![Coverage Status](https://coveralls.io/repos/openspending/babbage/badge.svg?branch=master&service=github)](https://coveralls.io/github/openspending/babbage?branch=master)
 
