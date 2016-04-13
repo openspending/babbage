@@ -5,6 +5,8 @@
     "format": "valid_hierarchies",
 
     "properties": {
+        "label": {"$ref": "#/definitions/label"},
+        "description": {"$ref": "#/definitions/description"},
         "fact_table": {"$ref": "#/definitions/table"},
         "measures": {"$ref": "#/definitions/measures"},
         "dimensions": {"$ref": "#/definitions/dimensions"},
