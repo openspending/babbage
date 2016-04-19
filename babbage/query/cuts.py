@@ -1,5 +1,5 @@
 import six
-from sqlalchemy import type_coerce
+from sqlalchemy import cast
 
 from babbage.query.parser import Parser
 from babbage.exc import QueryException
@@ -27,5 +27,5 @@ class Cuts(Parser):
             info.append({'ref': ref, 'operator': operator, 'value': value})
             table, column = self.cube.model[ref].bind(self.cube)
             q = self.ensure_table(q, table)
-            q = q.where(column == type_coerce(value, column.type))
+            q = q.where(column == cast(value, column.type))
         return info, q
