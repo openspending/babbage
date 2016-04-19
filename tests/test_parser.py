@@ -40,10 +40,6 @@ class ParserTestCase(TestCase):
     def test_cuts_invalid(self):
         Cuts(self.cube).parse('f oo:2015-01-04')
 
-    def test_cuts_null(self):
-        cuts = Cuts(self.cube).parse('foo:')
-        assert cuts[0][2] is None, cuts
-
     def test_null_filter(self):
         cuts = Cuts(self.cube).parse(None)
         assert isinstance(cuts, list)
