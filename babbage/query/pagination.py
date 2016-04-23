@@ -9,10 +9,10 @@ class Pagination(Parser):
         page_size = parse_int(page_size)
         if page_size is None:
             page_size = page_max
-        page = max(1, parse_int(page,0))
+        page = max(1, parse_int(page, 0))
         limit = max(0, min(page_max, page_size))
         q = q.limit(limit)
         offset = (page - 1) * limit
         if offset > 0:
             q = q.offset(offset)
-        return {'page': page, 'page_size': page_size}, q
+        return {'page': page, 'page_size': limit}, q
