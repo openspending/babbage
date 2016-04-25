@@ -19,7 +19,7 @@ class Fields(Parser):
         """ Define a set of fields to return for a non-aggregated query. """
         info = []
         for field in self.parse(fields):
-            for concept in self.cube.model.match(field):
+            for concept in sorted(self.cube.model.match(field), key=lambda c: c.name):
                 info.append(concept.ref)
                 table, column = concept.bind(self.cube)
                 q = self.ensure_table(q, table)
