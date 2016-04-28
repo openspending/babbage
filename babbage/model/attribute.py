@@ -8,6 +8,7 @@ class Attribute(Concept):
 
     def __init__(self, dimension, name, spec):
         super(Attribute, self).__init__(dimension.model, name, spec, '%s.%s' % (dimension.hierarchy, name))
+        self.datatype = spec.get('type')
         self.dimension = dimension
 
     @property

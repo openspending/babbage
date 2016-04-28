@@ -49,6 +49,10 @@ class Dimension(Concept):
                 return 'low'
             return 'tiny'
 
+    @property
+    def datatype(self):
+        return self.key_attribute.datatype
+
     def bind(self, cube):
         """ When one column needs to match, use the key. """
         return self.key_attribute.bind(cube)

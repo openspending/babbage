@@ -58,14 +58,6 @@ class CubeTestCase(TestCase):
         assert facts['total_fact_count'] == 12
         assert len(facts['data']) == 12, len(facts['data'])
 
-    def test_facts_basic_filter_coerce(self):
-        """
-        Filter using a value interpreted as int
-        """
-        facts = self.cube.facts(cuts=('cofog1:4'))
-        assert facts['total_fact_count'] == 12
-        assert len(facts['data']) == 12, len(facts['data'])
-
     @raises(QueryException)
     def test_facts_invalid_filter(self):
         self.cube.facts(cuts='cofogXX:"4"')
