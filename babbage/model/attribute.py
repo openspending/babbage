@@ -8,12 +8,15 @@ class Attribute(Concept):
 
     def __init__(self, dimension, name, spec):
         super(Attribute, self).__init__(dimension.model, name, spec, '%s.%s' % (dimension.hierarchy, name))
-        self.datatype = spec.get('type')
         self.dimension = dimension
 
     @property
     def ref(self):
         return '%s.%s' % (self.dimension.name, self.name)
+
+    @property
+    def datatype(self):
+        return self.spec.get('type')
 
     def __repr__(self):
         return "<Attribute(%s)>" % self.ref

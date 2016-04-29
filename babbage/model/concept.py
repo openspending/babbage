@@ -29,6 +29,14 @@ class Concept(object):
     def matched_ref(self):
         return self.ref if self._matched_ref is None else self._matched_ref
 
+    @property
+    def datatype(self):
+        """
+        String name of the type of the concept, ie string, integer or date,
+        to be overridden by concrete subclasses.
+        """
+        return None
+
     def match_ref(self,ref):
         """ Check if the ref matches one the concept's aliases.
             If so, mark the matched ref so that we use it as the column label.

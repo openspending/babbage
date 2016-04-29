@@ -16,7 +16,7 @@ class ParserTestCase(TestCase):
         self.cube = Cube(self.engine, 'simple', model)
 
     def test_cuts(self):
-        cuts = Cuts(self.cube).parse('foo:"bar"')
+        cuts = Cuts(self.cube).parse('foo:bar')
         assert len(cuts) == 1, cuts
 
     def test_cuts_quoted(self):
@@ -24,12 +24,12 @@ class ParserTestCase(TestCase):
         assert len(cuts) == 1, cuts
 
     def test_cuts_multiple(self):
-        cuts = Cuts(self.cube).parse('foo:"bar"|bar:5')
+        cuts = Cuts(self.cube).parse('foo:bar|bar:5')
         assert len(cuts) == 2, cuts
         assert ('bar', ':', 5) in cuts, cuts
 
     def test_cuts_multiple_int_first(self):
-        cuts = Cuts(self.cube).parse('bar:5|foo:"bar"')
+        cuts = Cuts(self.cube).parse('bar:5|foo:bar')
         assert len(cuts) == 2, cuts
         assert ('bar', ':', 5) in cuts, cuts
 
@@ -46,7 +46,7 @@ class ParserTestCase(TestCase):
         assert cuts[0][2] == 2015, cuts
 
     def test_cuts_int_prefixed_string(self):
-        cuts = Cuts(self.cube).parse('foo:"2015M01"')
+        cuts = Cuts(self.cube).parse('foo:2015M01')
         assert cuts[0][2] == '2015M01', cuts
 
     @raises(QueryException)

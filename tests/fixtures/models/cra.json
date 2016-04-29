@@ -225,11 +225,13 @@
     "measures": {
         "amount": {
             "column": "amount",
-            "label": "Amount"
+            "label": "Amount",
+            "type": "integer"
         },
         "total": {
             "column": "amount",
-            "label": "Total amount"
+            "label": "Total amount",
+            "type": "integer"
         }
     }
 }

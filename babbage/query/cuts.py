@@ -20,17 +20,29 @@ class Cuts(Parser):
         self.results.append((ast[0], ast[1], value))
 
     def _check_type(self, ref, value):
+        """
+        Checks whether the type of the cut value matches the type of the
+        concept being cut, and raises a QueryException if it doesn't match
+        """
         model_type = self.cube.model[ref].datatype
-        if type(value) is str and model_type == 'string':
-            return
-        if type(value) is unicode and model_type == 'string':
-            return
-        elif type(value) is int and model_type == 'integer':
-            return
-        elif type(value) is datetime.datetime and model_type == 'date':
+        if self._api_type(value) == model_type:
             return
         else:
-            raise QueryException('Invalid value %r for cut %s of type %s' % (value, ref, model_type))
+            raise QueryException("Invalid value %r parsed as %r "
+                                 "for cut %s of type %s"
+                                 % (value, type(value), ref, model_type))
+
+    def _api_type(self, value):
+        """
+        Returns the API type of the given value based on its python type.
+
+        """
+        if isinstance(value, six.string_types):
+            return 'string'
+        elif isinstance(value, six.integer_types):
+            return 'integer'
+        elif type(value) is datetime.datetime:
+            return 'date'
 
     def apply(self, q, cuts):
         """ Apply a set of filters, which can be given as a set of tuples in
