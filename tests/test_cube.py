@@ -58,6 +58,11 @@ class CubeTestCase(TestCase):
         assert facts['total_fact_count'] == 12, facts
         assert len(facts['data']) == 12, len(facts['data'])
 
+    def test_facts_set_filter(self):
+        facts = self.cube.facts(cuts='cofog1:"4";"10"')
+        assert facts['total_fact_count'] == 23, facts
+        assert len(facts['data']) == 23, len(facts['data'])
+
     @raises(QueryException)
     def test_facts_cut_type_error(self):
         self.cube.facts(cuts='cofog1:4')

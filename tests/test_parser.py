@@ -53,6 +53,11 @@ class ParserTestCase(TestCase):
         cuts = Cuts(self.cube).parse('foo:2015-01-04')
         assert cuts[0][2] == [date(2015, 1, 4)], cuts
 
+    def test_cuts_date_set(self):
+        cuts = Cuts(self.cube).parse('foo:2015-01-04;2015-01-05')
+        assert len(cuts) == 1, cuts
+        assert cuts[0][2] == [date(2015, 1, 4), date(2015, 1, 5)], cuts
+
     def test_cuts_int(self):
         cuts = Cuts(self.cube).parse('foo:2015')
         assert cuts[0][2] == [2015], cuts
