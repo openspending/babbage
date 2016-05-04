@@ -24,12 +24,15 @@ class Cuts(Parser):
         Checks whether the type of the cut value matches the type of the
         concept being cut, and raises a QueryException if it doesn't match
         """
+        if isinstance(value, list):
+            return map(lambda val: self._check_type(ref, val), value)
+
         model_type = self.cube.model[ref].datatype
         query_type = self._api_type(value)
         if query_type == model_type:
             return
         else:
-            raise QueryException("Invalid value %r parsed as '%s' "
+            raise QueryException("Invalid value %r parsed as type '%s' "
                                  "for cut %s of type '%s'"
                                  % (value, query_type, ref, model_type))
 
@@ -55,5 +58,5 @@ class Cuts(Parser):
             info.append({'ref': ref, 'operator': operator, 'value': value})
             table, column = self.cube.model[ref].bind(self.cube)
             q = self.ensure_table(q, table)
-            q = q.where(column == value)
+            q = q.where(column.in_(value))
         return info, q
