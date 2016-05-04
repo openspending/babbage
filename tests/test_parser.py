@@ -40,7 +40,12 @@ class ParserTestCase(TestCase):
         assert len(cuts) == 2, cuts
         assert ('bar', ':', [5]) in cuts, cuts
 
-    def test_cuts_quotes(self):
+    def test_cuts_quotes_and_semicolons(self):
+        cuts = Cuts(self.cube).parse('foo:"bar;lala";woo')
+        assert len(cuts) == 1, cuts
+        assert ('foo', ':', ['bar;lala', 'woo']) in cuts, cuts
+
+    def test_cuts_quotes_and_bars(self):
         cuts = Cuts(self.cube).parse('foo:"bar|lala"|bar:5')
         assert len(cuts) == 2, cuts
 
