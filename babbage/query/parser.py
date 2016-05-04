@@ -38,11 +38,11 @@ class Parser(object):
     def int_set(self, ast):
         return map(self.int_value, ast)
 
-    def date_set(self, ast):
-        return map(self.date_value, ast)
-
     def date_value(self, ast):
         return dateutil.parser.parse(ast).date()
+
+    def date_set(self, ast):
+        return map(self.date_value, ast)
 
     def parse(self, text):
         if isinstance(text, six.string_types):
