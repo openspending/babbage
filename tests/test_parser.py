@@ -59,9 +59,9 @@ class ParserTestCase(TestCase):
         assert not len(cuts)
 
     def test_order(self):
-        cuts = Ordering(self.cube).parse('foo:desc,bar')
-        assert cuts[0][1] == "desc", cuts
-        assert cuts[1][1] == "asc", cuts
+        ordering = Ordering(self.cube).parse('foo:desc,bar')
+        assert ordering[0][1] == "desc", ordering
+        assert ordering[1][1] == "asc", ordering
 
     @raises(QueryException)
     def test_order_invalid(self):
