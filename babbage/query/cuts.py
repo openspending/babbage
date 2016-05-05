@@ -25,12 +25,13 @@ class Cuts(Parser):
         concept being cut, and raises a QueryException if it doesn't match
         """
         model_type = self.cube.model[ref].datatype
-        if self._api_type(value) == model_type:
+        query_type = self._api_type(value)
+        if query_type == model_type:
             return
         else:
-            raise QueryException("Invalid value %r parsed as %r "
-                                 "for cut %s of type %s"
-                                 % (value, type(value), ref, model_type))
+            raise QueryException("Invalid value %r parsed as '%s' "
+                                 "for cut %s of type '%s'"
+                                 % (value, query_type, ref, model_type))
 
     def _api_type(self, value):
         """

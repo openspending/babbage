@@ -59,6 +59,10 @@ class CubeTestCase(TestCase):
         assert len(facts['data']) == 12, len(facts['data'])
 
     @raises(QueryException)
+    def test_facts_cut_type_error(self):
+        self.cube.facts(cuts='cofog1:4')
+
+    @raises(QueryException)
     def test_facts_invalid_filter(self):
         self.cube.facts(cuts='cofogXX:"4"')
 
