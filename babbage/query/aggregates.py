@@ -17,7 +17,7 @@ class Aggregates(Parser):
         for aggregate in self.parse(aggregates):
             info.append(aggregate)
             table, column = self.cube.model[aggregate].bind(self.cube)
-            q = self.ensure_table(q, table)
+            self.add_binding(table, aggregate)
             q = q.column(column)
 
         if not len(self.results):
@@ -25,6 +25,7 @@ class Aggregates(Parser):
             for aggregate in self.cube.model.aggregates:
                 info.append(aggregate.ref)
                 table, column = aggregate.bind(self.cube)
-                q = self.ensure_table(q, table)
+                self.add_binding(table, aggregate.ref)
                 q = q.column(column)
+        q = self.restrict_joins(q)
         return info, q

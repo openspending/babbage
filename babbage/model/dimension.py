@@ -10,6 +10,7 @@ class Dimension(Concept):
     def __init__(self, model, name, spec, hierarchy=None):
         super(Dimension, self).__init__(model, name, spec)
         self.hierarchy = hierarchy if hierarchy is not None else self.name
+        self.join_column_name = spec.get('join_column')
 
     @property
     def attributes(self):

@@ -26,6 +26,7 @@ class Cuts(Parser):
         for (ref, operator, value) in self.parse(cuts):
             info.append({'ref': ref, 'operator': operator, 'value': value})
             table, column = self.cube.model[ref].bind(self.cube)
-            q = self.ensure_table(q, table)
+            self.add_binding(table, ref)
             q = q.where(column == type_coerce(value, column.type))
+        q = self.restrict_joins(q)
         return info, q

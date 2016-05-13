@@ -21,7 +21,8 @@ class Drilldowns(Parser):
             for attribute in self.cube.model.match(drilldown):
                 info.append(attribute.ref)
                 table, column = attribute.bind(self.cube)
-                q = self.ensure_table(q, table)
+                self.add_binding(table, attribute.ref)
                 q = q.column(column)
                 q = q.group_by(column)
+        q = self.restrict_joins(q)
         return info, q
