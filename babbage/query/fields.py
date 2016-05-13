@@ -22,7 +22,7 @@ class Fields(Parser):
             for concept in sorted(self.cube.model.match(field), key=lambda c: c.name):
                 info.append(concept.ref)
                 table, column = concept.bind(self.cube)
-                q = self.ensure_table(q, table)
+                q = self.add_binding(q, (table, concept.ref))
                 q = q.column(column)
 
         if not len(self.results):
@@ -31,6 +31,7 @@ class Fields(Parser):
                     list(self.cube.model.measures):
                 info.append(concept.ref)
                 table, column = concept.bind(self.cube)
-                q = self.ensure_table(q, table)
+                q = self.add_binding(q, (table, concept.ref))
                 q = q.column(column)
+        q = self.restrict_joins(q)
         return info, q

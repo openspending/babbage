@@ -57,6 +57,7 @@ class Cuts(Parser):
             self._check_type(ref, value)
             info.append({'ref': ref, 'operator': operator, 'value': value})
             table, column = self.cube.model[ref].bind(self.cube)
-            q = self.ensure_table(q, table)
             q = q.where(column.in_(value))
+            q = self.add_binding(q, (table, ref))
+        q = self.restrict_joins(q)
         return info, q
