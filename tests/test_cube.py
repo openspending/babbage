@@ -12,6 +12,7 @@ class CubeTestCase(TestCase):
         super(CubeTestCase, self).setUp()
         self.cra_model = load_json_fixture('models/cra.json')
         self.cra_table = load_csv('cra.csv')
+        self.cra_table = load_csv('cap_or_cur.csv')
         self.cube = Cube(self.engine, 'cra', self.cra_model)
 
     def test_table_exists(self):

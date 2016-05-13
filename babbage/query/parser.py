@@ -67,7 +67,9 @@ class Parser(object):
             return q
         else:
             for binding in self.bindings:
-                print("table=%r ref=%r" % binding[0].name, binding[1])
+                if binding[0] == self.cube.fact_table:
+                    continue
+                print("table=%r ref=%r" % (binding[0].name, binding[1]))
                 concept = self.cube.model[binding[1]]
                 print("contept=%r" % concept)
                 dimension = concept.dimension  # assume it's an attribute

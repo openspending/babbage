@@ -15,6 +15,7 @@ class CubeManagerTestCase(TestCase):
         path = os.path.join(FIXTURE_PATH, 'models')
         self.mgr = JSONCubeManager(self.engine, path)
         self.cra_table = load_csv('cra.csv')
+        self.cra_table = load_csv('cap_or_cur.csv')
         configure_api(self.app, self.mgr)
 
     def test_index(self):
@@ -68,14 +69,14 @@ class CubeManagerTestCase(TestCase):
 
     def test_facts_simple(self):
         res = self.client.get(url_for('babbage_api.facts', name='cra'))
-        assert res.status_code == 200, res
+        assert res.status_code == 200, (res, res.get_data())
         assert 'total_fact_count' in res.json, res.json
         assert 36 == len(res.json['data']), res.json
 
     def test_facts_cut(self):
         res = self.client.get(url_for('babbage_api.facts', name='cra',
                                       cut='cofog1:"10"'))
-        assert res.status_code == 200, res
+        assert res.status_code == 200, (res, res.get_data())
         assert 11 == len(res.json['data']), len(res.json['data'])
 
     def test_members_missing(self):
