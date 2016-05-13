@@ -3,15 +3,21 @@
     "dimensions": {
         "cap_or_cur": {
             "attributes": {
-                "cap_or_cur": {
-                    "column": "cap_or_cur",
+                "code": {
+                    "column": "cap_or_cur.code",
+                    "label": "Label",
+                    "type": "string"
+                },
+                "label": {
+                    "column": "cap_or_cur.label",
                     "label": "Label",
                     "type": "string"
                 }
             },
-            "key_attribute": "cap_or_cur",
+            "key_attribute": "code",
             "description": "Central government, local government or public corporation",
-            "label": "CG, LG or PC"
+            "label": "CG, LG or PC",
+            "join_column": "cap_or_cur"
         },
         "cofog1": {
             "attributes": {
