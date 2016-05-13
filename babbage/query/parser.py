@@ -6,7 +6,7 @@ import six
 import dateutil.parser
 from grako.exceptions import GrakoException
 
-from babbage.exc import QueryException
+from babbage.exc import QueryException, BindingException
 from babbage.util import SCHEMA_PATH
 
 
@@ -22,6 +22,11 @@ class Parser(object):
     def __init__(self, cube):
         self.results = []
         self.cube = cube
+        self.bindings = []
+
+    def add_binding(self, q, binding):
+        self.bindings.append(binding)
+        return q
 
     def string_value(self, ast):
         text = ast[0]
@@ -29,11 +34,20 @@ class Parser(object):
             return json.loads(text)
         return text
 
+    def string_set(self, ast):
+        return map(self.string_value, ast)
+
     def int_value(self, ast):
         return int(ast)
 
+    def int_set(self, ast):
+        return map(self.int_value, ast)
+
     def date_value(self, ast):
         return dateutil.parser.parse(ast).date()
+
+    def date_set(self, ast):
+        return map(self.date_value, ast)
 
     def parse(self, text):
         if isinstance(text, six.string_types):
@@ -46,9 +60,26 @@ class Parser(object):
             text = []
         return text
 
-    def ensure_table(self, q, table):
-        if table not in q.froms:
-            q = q.select_from(table)
+    def restrict_joins(self, q):
+        #  if len(q.froms) == 0:
+        #      raise BindingException("woops % r", self.bindings)
+        if len(q.froms) == 1:
+            return q
+        else:
+            for binding in self.bindings:
+                if binding[0] == self.cube.fact_table:
+                    continue
+                print("table=%r ref=%r" % (binding[0].name, binding[1]))
+                concept = self.cube.model[binding[1]]
+                print("contept=%r" % concept)
+                dimension = concept.dimension  # assume it's an attribute
+                print("dimension=%r key_attribute=%r" % (dimension, dimension.key_attribute))
+                dimension_table, key_column = dimension.key_attribute.bind(self.cube)
+                if binding[0] != dimension_table:
+                    raise BindingException('Attributes must be of same table as '
+                                           'as their dimension key')
+                join_column = self.cube.fact_table.columns[dimension.join_column_name]
+                q = q.where(join_column == key_column)
         return q
 
     @staticmethod

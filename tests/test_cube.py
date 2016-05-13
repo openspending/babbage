@@ -12,6 +12,7 @@ class CubeTestCase(TestCase):
         super(CubeTestCase, self).setUp()
         self.cra_model = load_json_fixture('models/cra.json')
         self.cra_table = load_csv('cra.csv')
+        self.cra_table = load_csv('cap_or_cur.csv')
         self.cube = Cube(self.engine, 'cra', self.cra_model)
 
     def test_table_exists(self):
@@ -55,8 +56,17 @@ class CubeTestCase(TestCase):
 
     def test_facts_basic_filter(self):
         facts = self.cube.facts(cuts='cofog1:"4"')
-        assert facts['total_fact_count'] == 12
+        assert facts['total_fact_count'] == 12, facts
         assert len(facts['data']) == 12, len(facts['data'])
+
+    def test_facts_set_filter(self):
+        facts = self.cube.facts(cuts='cofog1:"4";"10"')
+        assert facts['total_fact_count'] == 23, facts
+        assert len(facts['data']) == 23, len(facts['data'])
+
+    @raises(QueryException)
+    def test_facts_cut_type_error(self):
+        self.cube.facts(cuts='cofog1:4')
 
     @raises(QueryException)
     def test_facts_invalid_filter(self):

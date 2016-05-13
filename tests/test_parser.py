@@ -15,18 +15,35 @@ class ParserTestCase(TestCase):
         model = load_json_fixture('models/simple_model.json')
         self.cube = Cube(self.engine, 'simple', model)
 
-    def test_cuts(self):
+    def test_cuts_unquoted_string(self):
         cuts = Cuts(self.cube).parse('foo:bar')
         assert len(cuts) == 1, cuts
+        assert ('foo', ':', ['bar']) in cuts, cuts
 
-    def test_cuts_quoted(self):
+    def test_cuts_quoted_string(self):
         cuts = Cuts(self.cube).parse('foo:"bar lala"')
         assert len(cuts) == 1, cuts
+        assert ('foo', ':', ['bar lala']) in cuts, cuts
+
+    def test_cuts_string_set(self):
+        cuts = Cuts(self.cube).parse('foo:"bar";"lala"')
+        assert len(cuts) == 1, cuts
+        assert ('foo', ':', ['bar', 'lala']) in cuts, cuts
+
+    def test_cuts_int_set(self):
+        cuts = Cuts(self.cube).parse('foo:3;22')
+        assert len(cuts) == 1, cuts
+        assert ('foo', ':', [3, 22]) in cuts, cuts
 
     def test_cuts_multiple(self):
         cuts = Cuts(self.cube).parse('foo:bar|bar:5')
         assert len(cuts) == 2, cuts
-        assert ('bar', ':', 5) in cuts, cuts
+        assert ('bar', ':', [5]) in cuts, cuts
+
+    def test_cuts_multiple_int_first(self):
+        cuts = Cuts(self.cube).parse('bar:5|foo:bar')
+        assert len(cuts) == 2, cuts
+        assert ('bar', ':', [5]) in cuts, cuts
 
     def test_cuts_quotes(self):
         cuts = Cuts(self.cube).parse('foo:"bar|lala"|bar:5')
@@ -34,15 +51,24 @@ class ParserTestCase(TestCase):
 
     def test_cuts_date(self):
         cuts = Cuts(self.cube).parse('foo:2015-01-04')
-        assert cuts[0][2] == date(2015, 1, 4), cuts
+        assert cuts[0][2] == [date(2015, 1, 4)], cuts
+
+    def test_cuts_date_set(self):
+        cuts = Cuts(self.cube).parse('foo:2015-01-04;2015-01-05')
+        assert len(cuts) == 1, cuts
+        assert cuts[0][2] == [date(2015, 1, 4), date(2015, 1, 5)], cuts
+
+    def test_cuts_int(self):
+        cuts = Cuts(self.cube).parse('foo:2015')
+        assert cuts[0][2] == [2015], cuts
+
+    def test_cuts_int_prefixed_string(self):
+        cuts = Cuts(self.cube).parse('foo:2015M01')
+        assert cuts[0][2] == ['2015M01'], cuts
 
     @raises(QueryException)
     def test_cuts_invalid(self):
         Cuts(self.cube).parse('f oo:2015-01-04')
-
-    def test_cuts_null(self):
-        cuts = Cuts(self.cube).parse('foo:')
-        assert cuts[0][2] is None, cuts
 
     def test_null_filter(self):
         cuts = Cuts(self.cube).parse(None)
@@ -50,9 +76,9 @@ class ParserTestCase(TestCase):
         assert not len(cuts)
 
     def test_order(self):
-        cuts = Ordering(self.cube).parse('foo:desc,bar')
-        assert cuts[0][1] == "desc", cuts
-        assert cuts[1][1] == "asc", cuts
+        ordering = Ordering(self.cube).parse('foo:desc,bar')
+        assert ordering[0][1] == "desc", ordering
+        assert ordering[1][1] == "asc", ordering
 
     @raises(QueryException)
     def test_order_invalid(self):
