@@ -8,6 +8,7 @@ from grako.exceptions import GrakoException
 
 from babbage.exc import QueryException, BindingException
 from babbage.util import SCHEMA_PATH
+from babbage.model.dimension import Dimension
 
 
 with open(os.path.join(SCHEMA_PATH, 'parser.ebnf'), 'rb') as fh:
@@ -79,7 +80,10 @@ class Parser(object):
                 if binding.table == self.cube.fact_table:
                     continue
                 concept = self.cube.model[binding.ref]
-                dimension = concept.dimension  # assume concept is an attribute
+                if isinstance(concept, Dimension):
+                    dimension = concept
+                else:
+                    dimension = concept.dimension
                 dimension_table, key_column = dimension.key_attribute.bind(self.cube)
                 if binding.table != dimension_table:
                     raise BindingException('Attributes must be of same table as '

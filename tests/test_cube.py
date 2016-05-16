@@ -37,6 +37,20 @@ class CubeTestCase(TestCase):
         self.cube = Cube(self.engine, 'cra', model)
         self.cube.model['cofog1.name'].bind(self.cube)
 
+    @raises(BindingException)
+    def test_star_column_nonexist(self):
+        model = self.cra_model.copy()
+        model['dimensions']['cap_or_cur']['join_column'] = 'lala'
+        self.cube = Cube(self.engine, 'cra', model)
+        self.cube.facts()
+
+    @raises(BindingException)
+    def test_attr_table_different_from_dimension_key(self):
+        model = self.cra_model.copy()
+        model['dimensions']['cap_or_cur']['attributes']['code']['column'] = 'cap_or_cur'
+        self.cube = Cube(self.engine, 'cra', model)
+        self.cube.facts()
+
     def test_dimension_column_qualified(self):
         model = self.cra_model.copy()
         name = 'cra.cofog1_name'
@@ -64,6 +78,11 @@ class CubeTestCase(TestCase):
         assert facts['total_fact_count'] == 23, facts
         assert len(facts['data']) == 23, len(facts['data'])
 
+    def test_facts_star_filter(self):
+        facts = self.cube.facts(cuts='cap_or_cur.label:"Current Expenditure"')
+        assert facts['total_fact_count'] == 21, facts
+        assert len(facts['data']) == 21, len(facts['data'])
+
     @raises(QueryException)
     def test_facts_cut_type_error(self):
         self.cube.facts(cuts='cofog1:4')
@@ -79,6 +98,14 @@ class CubeTestCase(TestCase):
         assert 'cofog1.name' in row0, row0
         assert 'amount' not in row0, row0
         assert 'amount.sum' not in row0, row0
+
+    def test_facts_star_fields(self):
+        facts = self.cube.facts(fields='cofog1,cap_or_cur.label')
+        assert facts['total_fact_count'] == 36, facts['total_fact_count']
+        row0 = facts['data'][0]
+        assert 'cofog1.name' in row0, row0
+        assert 'cap_or_cur.code' not in row0, row0
+        assert 'cap_or_cur.label' in row0, row0
 
     @raises(QueryException)
     def test_facts_invalid_field(self):
@@ -105,6 +132,17 @@ class CubeTestCase(TestCase):
         assert 'cofog1.name' in row0, row0
         assert 'amount' not in row0, row0
 
+    def test_members_star_dimension(self):
+        members = self.cube.members('cap_or_cur', order='cap_or_cur.label:asc')
+        assert members['total_member_count'] == 2, members['total_member_count']
+        assert len(members['data']) == 2, len(members['data'])
+        assert 'cap_or_cur.code' in members['data'][0], members['data'][0]
+        assert 'CAP' == members['data'][0]['cap_or_cur.code'], members['data'][0]
+
+    def test_members_star_dimension_order(self):
+        members = self.cube.members('cap_or_cur', order='cap_or_cur.label:desc')
+        assert 'CUR' == members['data'][0]['cap_or_cur.code'], members['data'][0]
+
     def test_members_paginate(self):
         members = self.cube.members('cofog1', page_size=2)
         assert members['total_member_count'] == 4, members['total_member_count']
@@ -118,16 +156,25 @@ class CubeTestCase(TestCase):
 
     def test_aggregate_basic(self):
         aggs = self.cube.aggregate(drilldowns='cofog1')
-        assert aggs['total_cell_count'] == 4, aggs['total_member_count']
+        assert aggs['total_cell_count'] == 4, aggs['total_cell_count']
         assert len(aggs['cells']) == 4, len(aggs['data'])
         row0 = aggs['cells'][0]
         assert 'cofog1.name' in row0, row0
         assert 'amount.sum' in row0, row0
         assert 'amount' not in row0, row0
 
+    def test_aggregate_star(self):
+        aggs = self.cube.aggregate(drilldowns='cap_or_cur', order='cap_or_cur')
+        assert aggs['total_cell_count'] == 2, aggs
+        assert len(aggs['cells']) == 2, len(aggs['data'])
+        row0 = aggs['cells'][0]
+        assert row0['cap_or_cur.code'] == 'CAP', row0
+        assert row0['amount.sum'] == -608400000, row0
+        assert row0['_count'] == 15, row0
+
     def test_aggregate_count_only(self):
         aggs = self.cube.aggregate(drilldowns='cofog1', aggregates='_count')
-        assert aggs['total_cell_count'] == 4, aggs['total_member_count']
+        assert aggs['total_cell_count'] == 4, aggs['total_cell_count']
         assert len(aggs['cells']) == 4, len(aggs['data'])
         assert '_count' in aggs['summary'], aggs['summary']
         row0 = aggs['cells'][0]
@@ -137,7 +184,7 @@ class CubeTestCase(TestCase):
 
     def test_aggregate_empty(self):
         aggs = self.cube.aggregate(drilldowns='cofog1', page_size=0)
-        assert aggs['total_cell_count'] == 4, aggs['total_member_count']
+        assert aggs['total_cell_count'] == 4, aggs['total_cell_count']
         assert len(aggs['cells']) == 0, len(aggs['data'])
 
     def test_compute_cardinalities(self):
