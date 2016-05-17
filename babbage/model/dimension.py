@@ -1,5 +1,6 @@
 from babbage.model.concept import Concept
 from babbage.model.attribute import Attribute
+from babbage.exc import BindingException
 
 
 class Dimension(Concept):
@@ -29,6 +30,8 @@ class Dimension(Concept):
         for attr in self.attributes:
             if attr.name == self.spec.get('key_attribute'):
                 return attr
+        raise BindingException("key_attribute '%s' not found in dimension '%s'"
+                               % (self.spec.get('key_attribute'), self.name))
 
     @property
     def cardinality(self):
