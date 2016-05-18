@@ -26,7 +26,7 @@ class Ordering(Parser):
             info.append((ref, direction))
             table, column = self.cube.model[ref].bind(self.cube)
             column = column.asc() if direction == 'asc' else column.desc()
-            q = self.ensure_table(q, table)
+            self.add_binding(table, ref)
             if self.cube.is_postgresql:
                 column = column.nullslast()
             q = q.order_by(column)
@@ -37,4 +37,5 @@ class Ordering(Parser):
                 if self.cube.is_postgresql:
                     column = column.nullslast()
                 q = q.order_by(column)
+        q = self.restrict_joins(q)
         return info, q
