@@ -78,6 +78,24 @@ class CubeTestCase(TestCase):
         assert facts['total_fact_count'] == 21, facts
         assert len(facts['data']) == 21, len(facts['data'])
 
+    def test_facts_star_filter_and_facts_field(self):
+        facts = self.cube.facts(cuts='cap_or_cur.label:"Current Expenditure"',
+                                fields='cofog1')
+        assert facts['total_fact_count'] == 21, facts
+        assert len(facts['data']) == 21, len(facts['data'])
+
+    def test_facts_star_filter_and_field(self):
+        facts = self.cube.facts(cuts='cap_or_cur.label:"Current Expenditure"',
+                                fields='cap_or_cur.code')
+        assert facts['total_fact_count'] == 21, facts
+        assert len(facts['data']) == 21, len(facts['data'])
+
+    def test_facts_facts_filter_and_star_field(self):
+        facts = self.cube.facts(cuts='cofog1:"4"',
+                                fields='cap_or_cur.code')
+        assert facts['total_fact_count'] == 12, facts
+        assert len(facts['data']) == 12, len(facts['data'])
+
     @raises(QueryException)
     def test_facts_invalid_filter(self):
         self.cube.facts(cuts='cofogXX:"4"')

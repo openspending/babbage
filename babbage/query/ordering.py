@@ -1,6 +1,7 @@
 import six
 
 from babbage.query.parser import Parser
+from babbage.model.binding import Binding
 from babbage.exc import QueryException
 
 
@@ -18,7 +19,7 @@ class Ordering(Parser):
             raise QueryException('Invalid sorting criterion: %r' % ast)
         self.results.append((ref, direction))
 
-    def apply(self, q, ordering):
+    def apply(self, q, bindings, ordering):
         """ Sort on a set of field specifications of the type (ref, direction)
         in order of the submitted list. """
         info = []
@@ -26,7 +27,7 @@ class Ordering(Parser):
             info.append((ref, direction))
             table, column = self.cube.model[ref].bind(self.cube)
             column = column.asc() if direction == 'asc' else column.desc()
-            self.add_binding(table, ref)
+            bindings.append(Binding(table, ref))
             if self.cube.is_postgresql:
                 column = column.nullslast()
             q = q.order_by(column)
@@ -37,5 +38,4 @@ class Ordering(Parser):
                 if self.cube.is_postgresql:
                     column = column.nullslast()
                 q = q.order_by(column)
-        q = self.restrict_joins(q)
-        return info, q
+        return info, q, bindings
