@@ -1,6 +1,7 @@
 import six
 
 from babbage.query.parser import Parser
+from babbage.model.binding import Binding
 from babbage.exc import QueryException
 
 import datetime
@@ -48,7 +49,7 @@ class Cuts(Parser):
         elif type(value) is datetime.datetime:
             return 'date'
 
-    def apply(self, q, cuts):
+    def apply(self, q, bindings, cuts):
         """ Apply a set of filters, which can be given as a set of tuples in
         the form (ref, operator, value), or as a string in query form. If it
         is ``None``, no filter will be applied. """
@@ -57,7 +58,6 @@ class Cuts(Parser):
             self._check_type(ref, value)
             info.append({'ref': ref, 'operator': operator, 'value': value})
             table, column = self.cube.model[ref].bind(self.cube)
-            self.add_binding(table, ref)
+            bindings.append(Binding(table, ref))
             q = q.where(column.in_(value))
-        q = self.restrict_joins(q)
-        return info, q
+        return info, q, bindings

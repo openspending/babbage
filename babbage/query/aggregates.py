@@ -1,4 +1,5 @@
 from babbage.query.parser import Parser
+from babbage.model.binding import Binding
 from babbage.exc import QueryException
 
 
@@ -12,12 +13,12 @@ class Aggregates(Parser):
             raise QueryException('Invalid aggregate: %r' % ast)
         self.results.append(ast)
 
-    def apply(self, q, aggregates):
+    def apply(self, q, bindings, aggregates):
         info = []
         for aggregate in self.parse(aggregates):
             info.append(aggregate)
             table, column = self.cube.model[aggregate].bind(self.cube)
-            self.add_binding(table, aggregate)
+            bindings.append(Binding(table, aggregate))
             q = q.column(column)
 
         if not len(self.results):
@@ -25,7 +26,6 @@ class Aggregates(Parser):
             for aggregate in self.cube.model.aggregates:
                 info.append(aggregate.ref)
                 table, column = aggregate.bind(self.cube)
-                self.add_binding(table, aggregate.ref)
+                bindings.append(Binding(table, aggregate.ref))
                 q = q.column(column)
-        q = self.restrict_joins(q)
-        return info, q
+        return info, q, bindings
