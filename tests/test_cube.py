@@ -200,6 +200,16 @@ class CubeTestCase(TestCase):
         assert 'amount.sum' not in row0, row0
         assert 'amount' not in row0, row0
 
+    def test_aggregate_star_count_only(self):
+        aggs = self.cube.aggregate(drilldowns='cap_or_cur',
+                                   order='cap_or_cur',
+                                   aggregates='_count')
+        assert aggs['total_cell_count'] == 2, aggs
+        assert len(aggs['cells']) == 2, len(aggs['data'])
+        row0 = aggs['cells'][0]
+        assert row0['cap_or_cur.code'] == 'CAP', row0
+        assert row0['_count'] == 15, row0
+
     def test_aggregate_empty(self):
         aggs = self.cube.aggregate(drilldowns='cofog1', page_size=0)
         assert aggs['total_cell_count'] == 4, aggs['total_cell_count']
