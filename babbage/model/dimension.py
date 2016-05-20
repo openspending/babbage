@@ -1,5 +1,6 @@
 from babbage.model.concept import Concept
 from babbage.model.attribute import Attribute
+from babbage.exc import BindingException
 
 
 class Dimension(Concept):
@@ -10,6 +11,7 @@ class Dimension(Concept):
     def __init__(self, model, name, spec, hierarchy=None):
         super(Dimension, self).__init__(model, name, spec)
         self.hierarchy = hierarchy if hierarchy is not None else self.name
+        self.join_column_name = spec.get('join_column')
 
     @property
     def attributes(self):
@@ -28,6 +30,8 @@ class Dimension(Concept):
         for attr in self.attributes:
             if attr.name == self.spec.get('key_attribute'):
                 return attr
+        raise BindingException("key_attribute '%s' not found in dimension '%s'"
+                               % (self.spec.get('key_attribute'), self.name))
 
     @property
     def cardinality(self):
@@ -48,6 +52,10 @@ class Dimension(Concept):
             if self.cardinality > 7:
                 return 'low'
             return 'tiny'
+
+    @property
+    def datatype(self):
+        return self.key_attribute.datatype
 
     def bind(self, cube):
         """ When one column needs to match, use the key. """

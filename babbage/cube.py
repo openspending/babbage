@@ -3,6 +3,7 @@ from sqlalchemy.schema import Table
 from sqlalchemy.sql.expression import select
 
 from babbage.model import Model
+from babbage.model.dimension import Dimension
 from babbage.query import count_results, generate_results, first_result
 from babbage.query import Cuts, Drilldowns, Fields, Ordering, Aggregates
 from babbage.query import Pagination
@@ -55,20 +56,23 @@ class Cube(object):
         return 'postgresql' == self.engine.dialect.name
 
     def aggregate(self, aggregates=None, drilldowns=None, cuts=None,
-                  order=None, page=None, page_size=None):
+                  order=None, page=None, page_size=None, page_max=10000):
         """ Main aggregation function. This is used to compute a given set of
         aggregates, grouped by a given set of drilldown dimensions (i.e.
         dividers). The query can also be filtered and sorted. """
         q = select()
-        cuts, q = Cuts(self).apply(q, cuts)
-        aggregates, q = Aggregates(self).apply(q, aggregates)
+        bindings = []
+        cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
+        aggregates, q, bindings = Aggregates(self).apply(q, bindings, aggregates)
         summary = first_result(self, q)
 
-        attributes, q = Drilldowns(self).apply(q, drilldowns)
+        attributes, q, bindings = Drilldowns(self).apply(q, bindings, drilldowns)
+        q = self.restrict_joins(q, bindings)
         count = count_results(self, q)
 
-        page, q = Pagination(self).apply(q, page, page_size)
-        ordering, q = Ordering(self).apply(q, order)
+        page, q = Pagination(self).apply(q, page, page_size, page_max)
+        ordering, q, bindings = Ordering(self).apply(q, bindings, order)
+        q = self.restrict_joins(q, bindings)
         return {
             'total_cell_count': count,
             'cells': list(generate_results(self, q)),
@@ -86,12 +90,15 @@ class Cube(object):
         paginated. If the reference describes a dimension, all attributes are
         returned. """
         q = select(distinct=True)
-        cuts, q = Cuts(self).apply(q, cuts)
-        fields, q = Fields(self).apply(q, ref)
-        ordering, q = Ordering(self).apply(q, order)
+        bindings = []
+        cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
+        fields, q, bindings = Fields(self).apply(q, bindings, ref)
+        ordering, q, bindings = Ordering(self).apply(q, bindings, order)
+        q = self.restrict_joins(q, bindings)
         count = count_results(self, q)
 
         page, q = Pagination(self).apply(q, page, page_size)
+        q = self.restrict_joins(q, bindings)
         return {
             'total_member_count': count,
             'data': list(generate_results(self, q)),
@@ -103,16 +110,19 @@ class Cube(object):
         }
 
     def facts(self, fields=None, cuts=None, order=None, page=None,
-              page_size=None):
+              page_size=None, page_max=10000):
         """ List all facts in the cube, returning only the specified references
         if these are specified. """
-        q = select()
-        cuts, q = Cuts(self).apply(q, cuts)
-        fields, q = Fields(self).apply(q, fields)
+        q = select().select_from(self.fact_table)
+        bindings = []
+        cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
+        fields, q, bindings = Fields(self).apply(q, bindings, fields)
+        q = self.restrict_joins(q, bindings)
         count = count_results(self, q)
 
-        ordering, q = Ordering(self).apply(q, order)
-        page, q = Pagination(self).apply(q, page, page_size)
+        ordering, q, bindings = Ordering(self).apply(q, bindings, order)
+        page, q = Pagination(self).apply(q, page, page_size, page_max)
+        q = self.restrict_joins(q, bindings)
         return {
             'total_fact_count': count,
             'data': list(generate_results(self, q)),
@@ -130,6 +140,38 @@ class Cube(object):
         for dimension in self.model.dimensions:
             result = self.members(dimension.ref, page_size=0)
             dimension.spec['cardinality'] = result.get('total_member_count')
+
+    def restrict_joins(self, q, bindings):
+        """
+        Restrict the joins across all tables referenced in the database
+        query to those specified in the model for the relevant dimensions.
+        If a single table is used for the query, no unnecessary joins are
+        performed. If more than one table are referenced, this ensures
+        their returned rows are connected via the fact table.
+        """
+        if len(q.froms) == 1:
+            return q
+        else:
+            for binding in bindings:
+                if binding.table == self.fact_table:
+                    continue
+                concept = self.model[binding.ref]
+                if isinstance(concept, Dimension):
+                    dimension = concept
+                else:
+                    dimension = concept.dimension
+                dimension_table, key_column = dimension.key_attribute.bind(self)
+                if binding.table != dimension_table:
+                    raise BindingException('Attributes must be of same table as '
+                                           'as their dimension key')
+                try:
+                    join_column = self.fact_table.columns[dimension.join_column_name]
+                except KeyError:
+                    raise BindingException("Join column '%s' for %r not in fact table."
+                                           % (dimension.join_column_name, dimension))
+
+                q = q.where(join_column == key_column)
+        return q
 
     def __repr__(self):
         return '<Cube(%r)' % self.name
