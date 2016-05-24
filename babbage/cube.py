@@ -64,6 +64,7 @@ class Cube(object):
         bindings = []
         cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
         aggregates, q, bindings = Aggregates(self).apply(q, bindings, aggregates)
+        q = self.restrict_joins(q, bindings)
         summary = first_result(self, q)
 
         attributes, q, bindings = Drilldowns(self).apply(q, bindings, drilldowns)
