@@ -1,4 +1,5 @@
 from babbage.query.parser import Parser
+from babbage.model.binding import Binding
 from babbage.exc import QueryException
 
 
@@ -15,14 +16,14 @@ class Fields(Parser):
             raise QueryException('Invalid field: %r' % ast)
         self.results.append(ast)
 
-    def apply(self, q, fields):
+    def apply(self, q, bindings, fields):
         """ Define a set of fields to return for a non-aggregated query. """
         info = []
         for field in self.parse(fields):
             for concept in self.cube.model.match(field):
                 info.append(concept.ref)
                 table, column = concept.bind(self.cube)
-                q = self.ensure_table(q, table)
+                bindings.append(Binding(table, concept.ref))
                 q = q.column(column)
 
         if not len(self.results):
@@ -31,6 +32,6 @@ class Fields(Parser):
                     list(self.cube.model.measures):
                 info.append(concept.ref)
                 table, column = concept.bind(self.cube)
-                q = self.ensure_table(q, table)
+                bindings.append(Binding(table, concept.ref))
                 q = q.column(column)
-        return info, q
+        return info, q, bindings
