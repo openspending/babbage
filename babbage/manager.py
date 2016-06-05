@@ -70,3 +70,24 @@ class JSONCubeManager(CubeManager):
         file_name = os.path.join(self.directory, name + '.json')
         with open(file_name, 'r') as fh:
             return json.load(fh)
+
+
+class CachingJSONCubeManager(JSONCubeManager):
+    """A simple extension of a JSONCubeManager keeping initialising each
+    cube only once and returning initilised cubes on subsequent calls"""
+
+    def __init__(self, engine, directory):
+        super(CachingJSONCubeManager, self).__init__(engine, directory)
+        self._cubes = {}
+        self._cube_names = set(super(CachingJSONCubeManager, self).list_cubes())
+
+    def list_cubes(self):
+        return self._cube_names
+
+    def has_cube(self, name):
+        return name in self._cube_names
+
+    def get_cube(self, name):
+        if name not in self._cubes:
+            self._cubes[name] = super(CachingJSONCubeManager, self).get_cube(name)
+        return self._cubes[name]

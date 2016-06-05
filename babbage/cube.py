@@ -19,19 +19,24 @@ class Cube(object):
         self.name = name
         if not isinstance(model, Model):
             model = Model(model)
-        self._fact_table = fact_table
+        self._tables = {}
+        if fact_table is not None:
+            self._tables[model.fact_table_name] = fact_table
         self.model = model
         self.engine = engine
         self.meta = MetaData(bind=engine)
 
     def _load_table(self, name):
         """ Reflect a given table from the database. """
-        if name == self.model.fact_table_name and self._fact_table is not None:
-            return self._fact_table
+        table = self._tables.get(name, None)
+        if table is not None:
+            return table
         if not self.engine.has_table(name):
             raise BindingException('Table does not exist: %r' % name,
                                    table=name)
-        return Table(name, self.meta, autoload=True)
+        table = Table(name, self.meta, autoload=True)
+        self._tables[name] = table
+        return table
 
     @property
     def fact_pk(self):
@@ -46,8 +51,6 @@ class Cube(object):
 
     @property
     def fact_table(self):
-        if self._fact_table is not None:
-            return self._fact_table
         return self._load_table(self.model.fact_table_name)
 
     @property
@@ -56,7 +59,7 @@ class Cube(object):
         return 'postgresql' == self.engine.dialect.name
 
     def aggregate(self, aggregates=None, drilldowns=None, cuts=None,
-                  order=None, page=None, page_size=None):
+                  order=None, page=None, page_size=None, page_max=10000):
         """ Main aggregation function. This is used to compute a given set of
         aggregates, grouped by a given set of drilldown dimensions (i.e.
         dividers). The query can also be filtered and sorted. """
@@ -71,7 +74,7 @@ class Cube(object):
         q = self.restrict_joins(q, bindings)
         count = count_results(self, q)
 
-        page, q = Pagination(self).apply(q, page, page_size)
+        page, q = Pagination(self).apply(q, page, page_size, page_max)
         ordering, q, bindings = Ordering(self).apply(q, bindings, order)
         q = self.restrict_joins(q, bindings)
         return {
@@ -111,7 +114,7 @@ class Cube(object):
         }
 
     def facts(self, fields=None, cuts=None, order=None, page=None,
-              page_size=None):
+              page_size=None, page_max=10000):
         """ List all facts in the cube, returning only the specified references
         if these are specified. """
         q = select().select_from(self.fact_table)
@@ -122,7 +125,7 @@ class Cube(object):
         count = count_results(self, q)
 
         ordering, q, bindings = Ordering(self).apply(q, bindings, order)
-        page, q = Pagination(self).apply(q, page, page_size)
+        page, q = Pagination(self).apply(q, page, page_size, page_max)
         q = self.restrict_joins(q, bindings)
         return {
             'total_fact_count': count,

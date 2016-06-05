@@ -23,19 +23,23 @@
             "attributes": {
                 "change_date": {
                     "column": "cofog1_change_date",
-                    "label": "Change date"
+                    "label": "Change date",
+                    "type": "date"
                 },
                 "description": {
                     "column": "cofog1_description",
-                    "label": "Description"
+                    "label": "Description",
+                    "type": "string"
                 },
                 "label": {
                     "column": "cofog1_label",
-                    "label": "Label"
+                    "label": "Label",
+                    "type": "string"
                 },
                 "name": {
                     "column": "cofog1_name",
-                    "label": "Name"
+                    "label": "Name",
+                    "type": "string"
                 }
             },
             "key_attribute": "name",
@@ -47,19 +51,23 @@
             "attributes": {
                 "change_date": {
                     "column": "cofog2_change_date",
-                    "label": "Change date"
+                    "label": "Change date",
+                    "type": "date"
                 },
                 "description": {
                     "column": "cofog2_description",
-                    "label": "Description"
+                    "label": "Description",
+                    "type": "string"
                 },
                 "label": {
                     "column": "cofog2_label",
-                    "label": "Label"
+                    "label": "Label",
+                    "type": "string"
                 },
                 "name": {
                     "column": "cofog2_name",
-                    "label": "Name"
+                    "label": "Name",
+                    "type": "integer"
                 }
             },
             "key_attribute": "name",
@@ -71,23 +79,28 @@
             "attributes": {
                 "change_date": {
                     "column": "cofog3_change_date",
-                    "label": "Date"
+                    "label": "Date",
+                    "type": "date"
                 },
                 "description": {
                     "column": "cofog3_description",
-                    "label": "Description"
+                    "label": "Description",
+                    "type": "string"
                 },
                 "label": {
                     "column": "cofog3_label",
-                    "label": "Label"
+                    "label": "Label",
+                    "type": "string"
                 },
                 "level": {
                     "column": "cofog3_level",
-                    "label": "Level"
+                    "label": "Level",
+                    "type": "string"
                 },
                 "name": {
                     "column": "cofog3_name",
-                    "label": "Name"
+                    "label": "Name",
+                    "type": "integer"
                 }
             },
             "key_attribute": "name",
@@ -99,7 +112,8 @@
             "attributes": {
                 "currency": {
                     "column": "currency",
-                    "label": "Currency"
+                    "label": "Currency",
+                    "type": "string"
                 }
             },
             "key_attribute": "currency",
@@ -109,15 +123,18 @@
             "attributes": {
                 "description": {
                     "column": "from_description",
-                    "label": "Description"
+                    "label": "Description",
+                    "type": "string"
                 },
                 "label": {
                     "column": "from_label",
-                    "label": "Label"
+                    "label": "Label",
+                    "type": "string"
                 },
                 "name": {
                     "column": "from_name",
-                    "label": "Name"
+                    "label": "Name",
+                    "type": "string"
                 }
             },
             "key_attribute": "name",
@@ -129,7 +146,8 @@
             "attributes": {
                 "name": {
                     "column": "name",
-                    "label": "Name"
+                    "label": "Name",
+                    "type": "string"
                 }
             },
             "key_attribute": "name",
@@ -139,11 +157,13 @@
             "attributes": {
                 "label": {
                     "column": "pog_label",
-                    "label": "Label"
+                    "label": "Label",
+                    "type": "string"
                 },
                 "name": {
                     "column": "pog_name",
-                    "label": "Name"
+                    "label": "Name",
+                    "type": "string"
                 }
             },
             "key_attribute": "name",
@@ -154,7 +174,8 @@
             "attributes": {
                 "population2006": {
                     "column": "population2006",
-                    "label": "Count"
+                    "label": "Count",
+                    "type": "integer"
                 }
             },
             "key_attribute": "population2006",
@@ -164,7 +185,8 @@
             "attributes": {
                 "region": {
                     "column": "region",
-                    "label": "Label"
+                    "label": "Label",
+                    "type": "string"
                 }
             },
             "key_attribute": "region",
@@ -174,7 +196,8 @@
           "attributes": {
                 "year": {
                     "column": "time_from_year",
-                    "label": "Year"
+                    "label": "Year",
+                    "type": "string"
                 }
             },
             "key_attribute": "year",
@@ -185,15 +208,18 @@
             "attributes": {
                 "description": {
                     "column": "to_description",
-                    "label": "Description"
+                    "label": "Description",
+                    "type": "string"
                 },
                 "label": {
                     "column": "to_label",
-                    "label": "Label"
+                    "label": "Label",
+                    "type": "string"
                 },
                 "name": {
                     "column": "to_name",
-                    "label": "Name"
+                    "label": "Name",
+                    "type": "string"
                 }
             },
             "key_attribute": "name",
@@ -205,11 +231,13 @@
     "measures": {
         "amount": {
             "column": "amount",
-            "label": "Amount"
+            "label": "Amount",
+            "type": "integer"
         },
         "total": {
             "column": "amount",
-            "label": "Total amount"
+            "label": "Total amount",
+            "type": "integer"
         }
     }
 }

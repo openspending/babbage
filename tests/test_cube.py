@@ -70,8 +70,13 @@ class CubeTestCase(TestCase):
 
     def test_facts_basic_filter(self):
         facts = self.cube.facts(cuts='cofog1:"4"')
-        assert facts['total_fact_count'] == 12
+        assert facts['total_fact_count'] == 12, facts
         assert len(facts['data']) == 12, len(facts['data'])
+
+    def test_facts_set_filter(self):
+        facts = self.cube.facts(cuts='cofog1:"4";"10"')
+        assert facts['total_fact_count'] == 23, facts
+        assert len(facts['data']) == 23, len(facts['data'])
 
     def test_facts_star_filter(self):
         facts = self.cube.facts(cuts='cap_or_cur.label:"Current Expenditure"')
@@ -95,6 +100,10 @@ class CubeTestCase(TestCase):
                                 fields='cap_or_cur.code')
         assert facts['total_fact_count'] == 12, facts
         assert len(facts['data']) == 12, len(facts['data'])
+
+    @raises(QueryException)
+    def test_facts_cut_type_error(self):
+        self.cube.facts(cuts='cofog1:4')
 
     @raises(QueryException)
     def test_facts_invalid_filter(self):
