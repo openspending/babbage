@@ -6,28 +6,28 @@
             "key_attribute": "key",
             "label_attribute": "key",
             "attributes": {
-                "key": {"label": "Key", "column": "foo_key"}
+                "key": {"label": "Key", "column": "foo_key", "type": "string"}
             }
         },
         "bar": {
             "label": "Bar",
             "key_attribute": "key",
             "attributes": {
-                "key": {"label": "Key", "column": "bar_key"}
+                "key": {"label": "Key", "column": "bar_key", "type": "string"}
             }
         },
         "baz": {
             "label": "Baz",
             "key_attribute": "key",
             "attributes": {
-                "key": {"label": "Key", "column": "bar_key"}
+                "key": {"label": "Key", "column": "bar_key", "type": "string"}
             }
         },
         "waz": {
             "label": "Waz",
             "key_attribute": "key",
             "attributes": {
-                "key": {"label": "Key", "column": "bar_key"}
+                "key": {"label": "Key", "column": "bar_key", "type": "string"}
             }
         }
 
@@ -35,7 +35,8 @@
     "measures": {
         "amount": {
             "label": "Amount in USD",
-            "column": "amount"
+            "column": "amount",
+            "type": "integer"
         }
     },
     "hierarchies": {

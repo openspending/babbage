@@ -22,6 +22,7 @@ class Parser(object):
     def __init__(self, cube):
         self.results = []
         self.cube = cube
+        self.bindings = []
 
     def string_value(self, ast):
         text = ast[0]
@@ -29,11 +30,20 @@ class Parser(object):
             return json.loads(text)
         return text
 
+    def string_set(self, ast):
+        return map(self.string_value, ast)
+
     def int_value(self, ast):
         return int(ast)
 
+    def int_set(self, ast):
+        return map(self.int_value, ast)
+
     def date_value(self, ast):
         return dateutil.parser.parse(ast).date()
+
+    def date_set(self, ast):
+        return map(self.date_value, ast)
 
     def parse(self, text):
         if isinstance(text, six.string_types):
@@ -45,11 +55,6 @@ class Parser(object):
         elif text is None:
             text = []
         return text
-
-    def ensure_table(self, q, table):
-        if table not in q.froms:
-            q = q.select_from(table)
-        return q
 
     @staticmethod
     def allrefs(*args):

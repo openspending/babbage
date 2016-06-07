@@ -12,6 +12,10 @@ class Measure(Concept):
         self.column_name = spec.get('column')
         self.aggregates = spec.get('aggregates', ['sum'])
 
+    @property
+    def datatype(self):
+        return self.spec.get('type')
+
     def __repr__(self):
         return "<Measure(%s)>" % self.ref
 

@@ -14,6 +14,10 @@ class Attribute(Concept):
     def ref(self):
         return '%s.%s' % (self.dimension.name, self.name)
 
+    @property
+    def datatype(self):
+        return self.spec.get('type')
+
     def __repr__(self):
         return "<Attribute(%s)>" % self.ref
 

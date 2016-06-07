@@ -21,7 +21,7 @@ setup(
     keywords='sql sqlalchemy olap cubes analytics',
     author='Friedrich Lindenberg',
     author_email='friedrich@pudo.org',
-    url='http://github.com/spendb/babbage',
+    url='http://github.com/openspending/babbage',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     namespace_packages=[],
