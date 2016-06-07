@@ -8,6 +8,8 @@ from flask import Blueprint, Response, request, current_app, json, url_for
 
 from babbage.exc import BabbageException
 
+map_is_class = type(map) == type
+
 blueprint = Blueprint('babbage_api', __name__)
 
 
@@ -44,6 +46,8 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(obj, Decimal):
             return float(obj)
         if isinstance(obj, set):
+            return [o for o in obj]
+        if map_is_class and isinstance(obj, map):
             return [o for o in obj]
         if hasattr(obj, 'to_dict'):
             return obj.to_dict()

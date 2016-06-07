@@ -56,18 +56,15 @@
                 },
                 "description": {
                     "column": "cofog2_description",
-                    "label": "Description",
-                    "type": "string"
+                    "label": "Description"
                 },
                 "label": {
                     "column": "cofog2_label",
-                    "label": "Label",
-                    "type": "string"
+                    "label": "Label"
                 },
                 "name": {
                     "column": "cofog2_name",
-                    "label": "Name",
-                    "type": "integer"
+                    "label": "Name"
                 }
             },
             "key_attribute": "name",

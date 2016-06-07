@@ -1,10 +1,11 @@
+import datetime
+
 import six
 
+from babbage.api import map_is_class
 from babbage.query.parser import Parser
 from babbage.model.binding import Binding
 from babbage.exc import QueryException
-
-import datetime
 
 
 class Cuts(Parser):
@@ -26,9 +27,11 @@ class Cuts(Parser):
         concept being cut, and raises a QueryException if it doesn't match
         """
         if isinstance(value, list):
-            return map(lambda val: self._check_type(ref, val), value)
+            return [self._check_type(ref, val) for val in value]
 
         model_type = self.cube.model[ref].datatype
+        if model_type is None:
+            return
         query_type = self._api_type(value)
         if query_type == model_type:
             return
@@ -55,6 +58,8 @@ class Cuts(Parser):
         is ``None``, no filter will be applied. """
         info = []
         for (ref, operator, value) in self.parse(cuts):
+            if map_is_class and isinstance(value, map):
+                value = list(value)
             self._check_type(ref, value)
             info.append({'ref': ref, 'operator': operator, 'value': value})
             table, column = self.cube.model[ref].bind(self.cube)
