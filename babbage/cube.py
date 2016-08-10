@@ -101,10 +101,10 @@ class Cube(object):
         """ List all the distinct members of the given reference, filtered and
         paginated. If the reference describes a dimension, all attributes are
         returned. """
-        q = select(distinct=True)
+        q = select()
         bindings = []
         cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
-        fields, q, bindings = Fields(self).apply(q, bindings, ref)
+        fields, q, bindings = Fields(self).apply(q, bindings, ref, distinct=True)
         ordering, q, bindings = Ordering(self).apply(q, bindings, order)
         q = self.restrict_joins(q, bindings)
         count = count_results(self, q)
