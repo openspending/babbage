@@ -31,6 +31,7 @@ class Ordering(Parser):
             if distinct is not None and distinct != ref:
                 column = asc(ref) if direction == 'asc' else desc(ref)
             else:
+                column = column.label(column.name)
                 column = column.asc() if direction == 'asc' else column.desc()
                 bindings.append(Binding(table, ref))
             if self.cube.is_postgresql:
