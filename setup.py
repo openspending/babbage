@@ -38,7 +38,7 @@ setup(
         'jsonschema >= 2.5.1',
         'sqlalchemy >= 1.0',
         'psycopg2 >= 2.6',
-        'grako >= 3.6.1'
+        'grako == 3.10.1'  # Versions > 3.10.1 break our tests
     ],
     tests_require=[
         'nose >= 1.3.7',
