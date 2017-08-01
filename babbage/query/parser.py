@@ -58,4 +58,9 @@ class Parser(object):
 
     @staticmethod
     def allrefs(*args):
-        return [ref for concept_list in args for concept in concept_list for ref in concept.refs]
+        return [
+            ref
+            for concept_list in args
+            for concept in concept_list
+            for ref in concept.refs
+        ]

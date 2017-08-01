@@ -7,7 +7,9 @@ class Attribute(Concept):
     or introduced via a join. """
 
     def __init__(self, dimension, name, spec):
-        super(Attribute, self).__init__(dimension.model, name, spec, '%s.%s' % (dimension.hierarchy, name))
+        super(Attribute, self).__init__(
+            dimension.model, name, spec, '%s.%s' % (dimension.hierarchy, name)
+        )
         self.dimension = dimension
 
     @property
