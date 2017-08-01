@@ -1,4 +1,6 @@
 import os
+import io
+import csv
 import pytest
 from flask import url_for
 
@@ -41,6 +43,19 @@ class TestCubeManager(object):
         assert res.status_code == 200, res
         assert 'summary' in res.json, res.json
         assert 1 == len(res.json['cells']), res.json
+
+    @pytest.mark.usefixtures('load_fixtures')
+    def test_aggregate_returns_csv_format(self, client):
+        res = client.get(url_for('babbage_api.aggregate', name='cra', format='csv'))
+
+        assert res.status_code == 200
+        data = res.get_data().decode('utf-8')
+        rows = [row for row in csv.DictReader(io.StringIO(data))]
+
+        assert rows == [
+            {'total.sum': '-371500000', 'amount.sum': '-371500000'}
+        ]
+
 
     @pytest.mark.usefixtures('load_fixtures')
     def test_aggregate_drilldown(self, client):
