@@ -1,41 +1,31 @@
-import os
-from nose.tools import raises
+import pytest
 
-from babbage.manager import JSONCubeManager
 from babbage.cube import Cube
 from babbage.exc import BabbageException
 
 
-from .util import TestCase, FIXTURE_PATH
-
-
-class CubeManagerTestCase(TestCase):
-
-    def setUp(self):
-        super(CubeManagerTestCase, self).setUp()
-        path = os.path.join(FIXTURE_PATH, 'models')
-        self.fixture_mgr = JSONCubeManager(self.engine, path)
-
-    def test_list_cubes(self):
-        cubes = list(self.fixture_mgr.list_cubes())
+@pytest.mark.usefixtures('load_api_fixtures')
+class TestCubeManager(object):
+    def test_list_cubes(self, fixtures_cube_manager):
+        cubes = list(fixtures_cube_manager.list_cubes())
         assert len(cubes) == 2, cubes
 
-    def test_has_cube(self):
-        assert self.fixture_mgr.has_cube('cra')
-        assert not self.fixture_mgr.has_cube('cro')
+    def test_has_cube(self, fixtures_cube_manager):
+        assert fixtures_cube_manager.has_cube('cra')
+        assert not fixtures_cube_manager.has_cube('cro')
 
-    def test_get_model(self):
-        model = self.fixture_mgr.get_cube_model('cra')
+    def test_get_model(self, fixtures_cube_manager):
+        model = fixtures_cube_manager.get_cube_model('cra')
         assert 'dimensions' in model
 
-    @raises(BabbageException)
-    def test_get_model_doesnt_exist(self):
-        self.fixture_mgr.get_cube_model('cro')
+    def test_get_model_doesnt_exist(self, fixtures_cube_manager):
+        with pytest.raises(BabbageException):
+            fixtures_cube_manager.get_cube_model('cro')
 
-    def test_get_cube(self):
-        cube = self.fixture_mgr.get_cube('cra')
+    def test_get_cube(self, fixtures_cube_manager):
+        cube = fixtures_cube_manager.get_cube('cra')
         assert isinstance(cube, Cube)
 
-    @raises(BabbageException)
-    def test_get_cube_doesnt_exist(self):
-        self.fixture_mgr.get_cube('cro')
+    def test_get_cube_doesnt_exist(self, fixtures_cube_manager):
+        with pytest.raises(BabbageException):
+            fixtures_cube_manager.get_cube('cro')

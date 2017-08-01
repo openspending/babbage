@@ -11,8 +11,9 @@ env:
         - BABBAGE_TEST_DB=postgresql://postgres@/babbage
     matrix:
         - TOXENV="py${PYTHON_VERSION//./}"
+
 install:
-    - pip install tox
+    - pip install tox coveralls
 before_script:
     - psql -c 'create database babbage;' -U postgres
 script:
