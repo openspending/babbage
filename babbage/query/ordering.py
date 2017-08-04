@@ -4,6 +4,8 @@ from babbage.query.parser import Parser
 from babbage.model.binding import Binding
 from babbage.exc import QueryException
 
+from sqlalchemy.sql.expression import asc, desc
+
 
 class Ordering(Parser):
     """ Handle parser output for sorting specifications, a tuple of a ref
@@ -19,15 +21,18 @@ class Ordering(Parser):
             raise QueryException('Invalid sorting criterion: %r' % ast)
         self.results.append((ref, direction))
 
-    def apply(self, q, bindings, ordering):
+    def apply(self, q, bindings, ordering, distinct=None):
         """ Sort on a set of field specifications of the type (ref, direction)
         in order of the submitted list. """
         info = []
         for (ref, direction) in self.parse(ordering):
             info.append((ref, direction))
             table, column = self.cube.model[ref].bind(self.cube)
-            column = column.asc() if direction == 'asc' else column.desc()
-            bindings.append(Binding(table, ref))
+            if distinct is not None and distinct != ref:
+                column = asc(ref) if direction == 'asc' else desc(ref)
+            else:
+                column = column.asc() if direction == 'asc' else column.desc()
+                bindings.append(Binding(table, ref))
             if self.cube.is_postgresql:
                 column = column.nullslast()
             q = q.order_by(column)

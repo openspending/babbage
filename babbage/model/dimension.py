@@ -15,8 +15,14 @@ class Dimension(Concept):
 
     @property
     def attributes(self):
+        key_attr_ref = self.spec.get('key_attribute')
         for name, attr in self.spec.get('attributes', {}).items():
-            yield Attribute(self, name, attr)
+            if name == key_attr_ref:
+                yield Attribute(self, name, attr)
+                break
+        for name, attr in self.spec.get('attributes', {}).items():
+            if name != key_attr_ref:
+                yield Attribute(self, name, attr)
 
     @property
     def label_attribute(self):
