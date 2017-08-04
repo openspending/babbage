@@ -105,7 +105,7 @@ class Cube(object):
         bindings = []
         cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
         fields, q, bindings = Fields(self).apply(q, bindings, ref, distinct=True)
-        ordering, q, bindings = Ordering(self).apply(q, bindings, order)
+        ordering, q, bindings = Ordering(self).apply(q, bindings, order, distinct=fields[0])
         q = self.restrict_joins(q, bindings)
         count = count_results(self, q)
 
