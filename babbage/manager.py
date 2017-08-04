@@ -79,7 +79,9 @@ class CachingJSONCubeManager(JSONCubeManager):
     def __init__(self, engine, directory):
         super(CachingJSONCubeManager, self).__init__(engine, directory)
         self._cubes = {}
-        self._cube_names = set(super(CachingJSONCubeManager, self).list_cubes())
+        self._cube_names = set(
+            super(CachingJSONCubeManager, self).list_cubes()
+        )
 
     def list_cubes(self):
         return self._cube_names
@@ -89,5 +91,6 @@ class CachingJSONCubeManager(JSONCubeManager):
 
     def get_cube(self, name):
         if name not in self._cubes:
-            self._cubes[name] = super(CachingJSONCubeManager, self).get_cube(name)
+            self._cubes[name] = super(CachingJSONCubeManager, self) \
+                                    .get_cube(name)
         return self._cubes[name]

@@ -5,3 +5,6 @@
 env/*
 /.idea
 *.iml
+.tox
+.cache
+.#*

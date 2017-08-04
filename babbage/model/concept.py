@@ -23,7 +23,7 @@ class Concept(object):
     @property
     def refs(self):
         """ Aliases for this model's ref. """
-        return [self.ref,self.alias]
+        return [self.ref, self.alias]
 
     @property
     def matched_ref(self):
@@ -37,7 +37,7 @@ class Concept(object):
         """
         return None
 
-    def match_ref(self,ref):
+    def match_ref(self, ref):
         """ Check if the ref matches one the concept's aliases.
             If so, mark the matched ref so that we use it as the column label.
         """

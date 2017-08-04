@@ -66,11 +66,19 @@ class Cube(object):
         q = select()
         bindings = []
         cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
-        aggregates, q, bindings = Aggregates(self).apply(q, bindings, aggregates)
+        aggregates, q, bindings = Aggregates(self).apply(
+            q,
+            bindings,
+            aggregates
+        )
         q = self.restrict_joins(q, bindings)
         summary = first_result(self, q)
 
-        attributes, q, bindings = Drilldowns(self).apply(q, bindings, drilldowns)
+        attributes, q, bindings = Drilldowns(self).apply(
+            q,
+            bindings,
+            drilldowns
+        )
         q = self.restrict_joins(q, bindings)
         count = count_results(self, q)
 
@@ -164,17 +172,23 @@ class Cube(object):
                     dimension = concept
                 else:
                     dimension = concept.dimension
-                dimension_table, key_column = dimension.key_attribute.bind(self)
+                dimension_table, key_col = dimension.key_attribute.bind(self)
                 if binding.table != dimension_table:
-                    raise BindingException('Attributes must be of same table as '
-                                           'as their dimension key')
+                    raise BindingException(
+                        'Attributes must be of same table as as their'
+                        ' dimension key'
+                    )
                 try:
-                    join_column = self.fact_table.columns[dimension.join_column_name]
+                    join_column = self.fact_table.columns[
+                        dimension.join_column_name
+                    ]
                 except KeyError:
-                    raise BindingException("Join column '%s' for %r not in fact table."
-                                           % (dimension.join_column_name, dimension))
+                    raise BindingException(
+                        "Join column '%s' for %r not in fact table."
+                        % (dimension.join_column_name, dimension)
+                    )
 
-                q = q.where(join_column == key_column)
+                q = q.where(join_column == key_col)
         return q
 
     def __repr__(self):

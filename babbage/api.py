@@ -64,6 +64,27 @@ def jsonify(obj, status=200, headers=None):
                     mimetype='application/json')
 
 
+def create_csv_response(columns, rows):
+   def _generator():
+       columns_to_show = [
+           column
+           for column in columns
+           if not column.startswith('_')
+       ]
+       yield ','.join(columns_to_show) + '\n'
+
+       for row in rows:
+           data = [
+               str(row.get(column))
+               for column in columns_to_show
+           ]
+           yield ','.join(data) + '\n'
+
+   return Response(
+       _generator(), mimetype='text/csv'
+   )
+
+
 def url(*a, **kw):
     kw['_external'] = True
     return url_for(*a, **kw)
@@ -127,7 +148,11 @@ def aggregate(name):
                             page=request.args.get('page'),
                             page_size=request.args.get('pagesize'))
     result['status'] = 'ok'
-    return jsonify(result)
+
+    if request.args.get('format', '').lower() == 'csv':
+        return create_csv_response(result['aggregates'], result['cells'])
+    else:
+        return jsonify(result)
 
 
 @blueprint.route('/cubes/<name>/facts')
