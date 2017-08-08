@@ -59,7 +59,7 @@ class Cube(object):
         return 'postgresql' == self.engine.dialect.name
 
     def aggregate(self, aggregates=None, drilldowns=None, cuts=None,
-                  order=None, page=None, page_size=None, page_max=10000):
+                  order=None, page=None, page_size=None, page_max=None):
         """ Main aggregation function. This is used to compute a given set of
         aggregates, grouped by a given set of drilldown dimensions (i.e.
         dividers). The query can also be filtered and sorted. """
@@ -122,7 +122,7 @@ class Cube(object):
         }
 
     def facts(self, fields=None, cuts=None, order=None, page=None,
-              page_size=None, page_max=10000):
+              page_size=None, page_max=None):
         """ List all facts in the cube, returning only the specified references
         if these are specified. """
         q = select().select_from(self.fact_table)
