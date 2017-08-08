@@ -4,7 +4,7 @@ from datetime import date
 from decimal import Decimal
 
 from werkzeug.exceptions import NotFound
-from flask import Blueprint, Response, request, current_app, json, url_for
+from flask import Blueprint, Response, request, current_app, json, url_for, make_response
 
 from babbage.exc import BabbageException
 
@@ -77,12 +77,15 @@ def create_csv_response(columns, rows):
             data = [
                 str(row.get(column))
                 for column in columns_to_show
-                ]
+            ]
             yield ','.join(data) + '\n'
 
-    return Response(
-        _generator(), mimetype='text/csv'
-    )
+    data = ''.join([row for row in _generator()])
+
+    response = make_response(data)
+    response.mimetype = 'text/csv'
+
+    return response
 
 
 def url(*a, **kw):
