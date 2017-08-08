@@ -194,6 +194,19 @@ class TestCube(object):
         assert 'amount.sum' in row0, row0
         assert 'amount' not in row0, row0
 
+    def test_aggregate_summary(self, cube):
+        sum_by = lambda arr, key: sum([element[key] for element in arr])
+        aggs = cube.aggregate(drilldowns='cofog1')
+        cells = aggs['cells']
+
+        expected_summary = {
+            '_count': sum_by(cells, '_count'),
+            'amount.sum': sum_by(cells, 'amount.sum'),
+            'total.sum': sum_by(cells, 'total.sum'),
+        }
+
+        assert aggs['summary'] == expected_summary
+
     def test_aggregate_star(self, cube):
         aggs = cube.aggregate(drilldowns='cap_or_cur', order='cap_or_cur')
         assert aggs['total_cell_count'] == 2, aggs
