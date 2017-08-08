@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import select
 
 from babbage.model import Model
 from babbage.model.dimension import Dimension
-from babbage.query import count_results, generate_results, first_result
+from babbage.query import count_results, generate_results
 from babbage.query import Cuts, Drilldowns, Fields, Ordering, Aggregates
 from babbage.query import Pagination
 from babbage.exc import BindingException
@@ -66,14 +66,6 @@ class Cube(object):
         q = select()
         bindings = []
         cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
-        aggregates, q, bindings = Aggregates(self).apply(
-            q,
-            bindings,
-            aggregates
-        )
-        q = self.restrict_joins(q, bindings)
-        summary = first_result(self, q)
-
         attributes, q, bindings = Drilldowns(self).apply(
             q,
             bindings,
@@ -82,12 +74,23 @@ class Cube(object):
         q = self.restrict_joins(q, bindings)
         count = count_results(self, q)
 
+        aggregates, q, bindings = Aggregates(self).apply(
+            q,
+            bindings,
+            aggregates
+        )
+        q = self.restrict_joins(q, bindings)
+
         page, q = Pagination(self).apply(q, page, page_size, page_max)
         ordering, q, bindings = Ordering(self).apply(q, bindings, order)
         q = self.restrict_joins(q, bindings)
+
+        cells = list(generate_results(self, q))
+        summary = cells[0] if len(cells) > 0 else None
+
         return {
             'total_cell_count': count,
-            'cells': list(generate_results(self, q)),
+            'cells': cells,
             'summary': summary,
             'cell': cuts,
             'aggregates': aggregates,
@@ -104,8 +107,10 @@ class Cube(object):
         q = select()
         bindings = []
         cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
-        fields, q, bindings = Fields(self).apply(q, bindings, ref, distinct=True)
-        ordering, q, bindings = Ordering(self).apply(q, bindings, order, distinct=fields[0])
+        fields, q, bindings = \
+            Fields(self).apply(q, bindings, ref, distinct=True)
+        ordering, q, bindings = \
+            Ordering(self).apply(q, bindings, order, distinct=fields[0])
         q = self.restrict_joins(q, bindings)
         count = count_results(self, q)
 
@@ -128,10 +133,10 @@ class Cube(object):
         q = select().select_from(self.fact_table)
         bindings = []
         cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
-        fields, q, bindings = Fields(self).apply(q, bindings, fields)
         q = self.restrict_joins(q, bindings)
         count = count_results(self, q)
 
+        fields, q, bindings = Fields(self).apply(q, bindings, fields)
         ordering, q, bindings = Ordering(self).apply(q, bindings, order)
         page, q = Pagination(self).apply(q, page, page_size, page_max)
         q = self.restrict_joins(q, bindings)

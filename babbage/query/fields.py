@@ -31,8 +31,8 @@ class Fields(Parser):
                 bindings.append(Binding(table, concept.ref))
                 if distinct:
                     if group_by is None:
-                        q=q.group_by(column)
-                        group_by=column
+                        q = q.group_by(column)
+                        group_by = column
                     else:
                         min_column = func.max(column)
                         min_column = min_column.label(column.name)

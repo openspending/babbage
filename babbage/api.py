@@ -65,24 +65,24 @@ def jsonify(obj, status=200, headers=None):
 
 
 def create_csv_response(columns, rows):
-   def _generator():
-       columns_to_show = [
-           column
-           for column in columns
-           if not column.startswith('_')
-       ]
-       yield ','.join(columns_to_show) + '\n'
+    def _generator():
+        columns_to_show = [
+            column
+            for column in columns
+            if not column.startswith('_')
+        ]
+        yield ','.join(columns_to_show) + '\n'
 
-       for row in rows:
-           data = [
-               str(row.get(column))
-               for column in columns_to_show
-           ]
-           yield ','.join(data) + '\n'
+        for row in rows:
+            data = [
+                str(row.get(column))
+                for column in columns_to_show
+                ]
+            yield ','.join(data) + '\n'
 
-   return Response(
-       _generator(), mimetype='text/csv'
-   )
+    return Response(
+        _generator(), mimetype='text/csv'
+    )
 
 
 def url(*a, **kw):

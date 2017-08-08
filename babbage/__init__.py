@@ -1,6 +1,6 @@
 """ Babbage, an OLAP-like, light-weight database analytical engine. """
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 from babbage.manager import CubeManager, JSONCubeManager  # noqa
 from babbage.api import configure_api  # noqa
