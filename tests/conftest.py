@@ -28,6 +28,7 @@ def fixtures_cube_manager(sqla_engine):
     path = os.path.join(FIXTURE_PATH, 'models')
     return babbage.manager.JSONCubeManager(sqla_engine, path)
 
+
 @pytest.fixture
 def load_api_fixtures(app, fixtures_cube_manager):
     return babbage.api.configure_api(app, fixtures_cube_manager)
