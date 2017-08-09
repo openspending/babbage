@@ -1,7 +1,7 @@
 # Babbage Analytical Engine
 
 [![Gitter](https://img.shields.io/gitter/room/openspending/chat.svg)](https://gitter.im/openspending/chat)
-[![Build Status](https://travis-ci.org/openspending/babbage.svg?branch=master)](https://travis-ci.org/spendb/babbage)
+[![Build Status](https://travis-ci.org/openspending/babbage.svg?branch=master)](https://travis-ci.org/openspending/babbage)
 [![Coverage Status](https://coveralls.io/repos/openspending/babbage/badge.svg?branch=master&service=github)](https://coveralls.io/github/openspending/babbage?branch=master)
 
 ``babbage`` is a lightweight implementation of an OLAP-style database
@@ -29,7 +29,7 @@ source repository and then use the provided ``Makefile`` to install the
 library (this requires ``virtualenv`` to be installed):
 
 ```bash
-$ git clone https://github.com/spendb/babbage.git
+$ git clone https://github.com/openspending/babbage.git
 $ cd babbage
 $ make install
 $ make test
