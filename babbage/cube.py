@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import select
 
 from babbage.model import Model
 from babbage.model.dimension import Dimension
-from babbage.query import count_results, generate_results
+from babbage.query import count_results, generate_results, first_result
 from babbage.query import Cuts, Drilldowns, Fields, Ordering, Aggregates
 from babbage.query import Pagination
 from babbage.exc import BindingException
@@ -66,18 +66,30 @@ class Cube(object):
         q = select()
         bindings = []
         cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
-        attributes, q, bindings = Drilldowns(self).apply(
+
+        # Count
+        attributes, count_q, count_bindings = Drilldowns(self).apply(
             q,
             bindings,
             drilldowns
         )
-        q = self.restrict_joins(q, bindings)
-        count = count_results(self, q)
+        count_q = self.restrict_joins(count_q, count_bindings)
+        count = count_results(self, count_q)
 
+        # Summary
         aggregates, q, bindings = Aggregates(self).apply(
             q,
             bindings,
             aggregates
+        )
+        q = self.restrict_joins(q, bindings)
+        summary = first_result(self, q.limit(1))
+
+        # Results
+        attributes, q, bindings = Drilldowns(self).apply(
+            q,
+            bindings,
+            drilldowns
         )
         q = self.restrict_joins(q, bindings)
 
@@ -86,7 +98,6 @@ class Cube(object):
         q = self.restrict_joins(q, bindings)
 
         cells = list(generate_results(self, q))
-        summary = cells[0] if len(cells) > 0 else None
 
         return {
             'total_cell_count': count,
