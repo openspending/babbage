@@ -64,20 +64,20 @@ def jsonify(obj, status=200, headers=None):
                     mimetype='application/json')
 
 
-def create_csv_response(columns, rows):
+def create_csv_response(rows):
     def _generator():
-        columns_to_show = [
-            column
-            for column in columns
-            if not column.startswith('_')
-        ]
-        yield ','.join(columns_to_show) + '\n'
+        convert_to_str = lambda value: str(value) if value is not None else ''
+        columns = []
 
-        for row in rows:
+        for index, row in enumerate(rows):
+            if index == 0:
+                columns = sorted(row.keys())
+                yield ','.join(columns) + '\n'
+
             data = [
-                str(row.get(column))
-                for column in columns_to_show
-                ]
+                convert_to_str(row.get(column))
+                for column in columns
+            ]
             yield ','.join(data) + '\n'
 
     return Response(
@@ -154,7 +154,7 @@ def aggregate(name):
     result['status'] = 'ok'
 
     if request.args.get('format', '').lower() == 'csv':
-        return create_csv_response(result['aggregates'], result['cells'])
+        return create_csv_response(result['cells'])
     else:
         return jsonify(result)
 

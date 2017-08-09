@@ -46,16 +46,46 @@ class TestCubeManager(object):
 
     @pytest.mark.usefixtures('load_fixtures')
     def test_aggregate_returns_csv_format(self, client):
-        res = client.get(url_for('babbage_api.aggregate', name='cra', format='csv'))
+        url = url_for(
+            'babbage_api.aggregate',
+            name='cra',
+            drilldown='cofog1.label',
+            order='cofog1.label',
+            format='csv'
+        )
+        res = client.get(url)
 
         assert res.status_code == 200
         data = res.get_data().decode('utf-8')
         rows = [row for row in csv.DictReader(io.StringIO(data))]
-
-        assert rows == [
-            {'total.sum': '-371500000', 'amount.sum': '-371500000'}
+        expected_rows = [
+            {
+                '_count': '12',
+                'amount.sum': '45400000',
+                'cofog1.label': 'Economic affairs',
+                'total.sum': '45400000'
+            },
+            {
+                '_count': '8',
+                'amount.sum': '-608900000',
+                'cofog1.label': 'Housing and community amenities',
+                'total.sum': '-608900000'
+            },
+            {
+                '_count': '5',
+                'amount.sum': '500000',
+                'cofog1.label': 'Public order and safety',
+                'total.sum': '500000'
+            },
+            {
+                '_count': '11',
+                'amount.sum': '191500000',
+                'cofog1.label': 'Social protection',
+                'total.sum': '191500000'
+            }
         ]
 
+        assert rows == expected_rows
 
     @pytest.mark.usefixtures('load_fixtures')
     def test_aggregate_drilldown(self, client):
