@@ -81,7 +81,11 @@ def create_csv_response(columns, rows):
             yield ','.join(data) + '\n'
 
     return Response(
-        _generator(), mimetype='text/csv'
+        _generator(),
+        mimetype='text/csv',
+        headers={
+            'Content-disposition': 'attachment; filename="data.csv"'
+        }
     )
 
 
