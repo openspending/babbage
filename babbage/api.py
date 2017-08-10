@@ -66,7 +66,7 @@ def jsonify(obj, status=200, headers=None):
 
 def create_csv_response(rows):
     def _generator():
-        convert_to_str = lambda value: str(value) if value is not None else ''
+        convert_to_str = lambda value: str(value) if value is not None else '' # noqa
         columns = []
 
         for index, row in enumerate(rows):
