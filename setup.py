@@ -1,9 +1,6 @@
 from setuptools import setup, find_packages
 
-try:
-    from babbage import __version__
-except ImportError:
-    __version__ = 'dev'
+exec(open('babbage/version.py', 'r').read())
 
 setup(
     name='babbage',
