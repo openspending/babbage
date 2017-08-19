@@ -116,7 +116,7 @@ def index():
     })
 
 
-@blueprint.route('/cubes')
+@blueprint.route('/cubes/')
 def cubes():
     """ Get a listing of all publicly available cubes. """
     cubes = []
@@ -130,7 +130,7 @@ def cubes():
     })
 
 
-@blueprint.route('/cubes/<name>/model')
+@blueprint.route('/cubes/<name>/model/')
 def model(name):
     """ Get the model for the specified cube. """
     cube = get_cube(name)
@@ -141,7 +141,7 @@ def model(name):
     })
 
 
-@blueprint.route('/cubes/<name>/aggregate')
+@blueprint.route('/cubes/<name>/aggregate/')
 def aggregate(name):
     """ Perform an aggregation request. """
     cube = get_cube(name)
@@ -159,7 +159,7 @@ def aggregate(name):
         return jsonify(result)
 
 
-@blueprint.route('/cubes/<name>/facts')
+@blueprint.route('/cubes/<name>/facts/')
 def facts(name):
     """ List the fact table entries in the current cube. This is the full
     materialized dataset. """
@@ -173,7 +173,7 @@ def facts(name):
     return jsonify(result)
 
 
-@blueprint.route('/cubes/<name>/members/<ref>')
+@blueprint.route('/cubes/<name>/members/<ref>/')
 def members(name, ref):
     """ List the members of a specific dimension or the distinct values of a
     given attribute. """
