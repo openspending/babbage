@@ -121,8 +121,8 @@ class Cube(object):
         """ List all the distinct members of the given reference, filtered and
         paginated. If the reference describes a dimension, all attributes are
         returned. """
-        def prep(cuts, ref, order, *select_args):
-            q = select(*select_args)
+        def prep(cuts, ref, order, columns=None):
+            q = select(columns=columns)
             bindings = []
             cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
             fields, q, bindings = \
@@ -154,15 +154,15 @@ class Cube(object):
         """ List all facts in the cube, returning only the specified references
         if these are specified. """
 
-        def prep(cuts, *select_args):
-            q = select().select_from(self.fact_table)
+        def prep(cuts, columns=None):
+            q = select(columns=columns).select_from(self.fact_table)
             bindings = []
             _, q, bindings = Cuts(self).apply(q, bindings, cuts)
             q = self.restrict_joins(q, bindings)
             return q, bindings
 
         # Count
-        count = count_results(self, prep(cuts)[0])
+        count = count_results(self, prep(cuts, [1])[0])
 
         # Facts
         q, bindings = prep(cuts)
