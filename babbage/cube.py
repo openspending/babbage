@@ -63,36 +63,42 @@ class Cube(object):
         """ Main aggregation function. This is used to compute a given set of
         aggregates, grouped by a given set of drilldown dimensions (i.e.
         dividers). The query can also be filtered and sorted. """
-        q = select()
-        bindings = []
-        cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
+
+        def prep(cuts, drilldowns=False, aggregates=False, columns=None):
+            q = select(columns)
+            bindings = []
+            cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
+
+            attributes = None
+            if drilldowns is not False:
+                attributes, q, bindings = Drilldowns(self).apply(
+                    q,
+                    bindings,
+                    drilldowns
+                )
+
+            if aggregates is not False:
+                aggregates, q, bindings = Aggregates(self).apply(
+                    q,
+                    bindings,
+                    aggregates
+                )
+
+            q = self.restrict_joins(q, bindings)
+            return q, bindings, attributes, aggregates, cuts
 
         # Count
-        attributes, count_q, count_bindings = Drilldowns(self).apply(
-            q,
-            bindings,
-            drilldowns
-        )
-        count_q = self.restrict_joins(count_q, count_bindings)
-        count = count_results(self, count_q)
+        count = count_results(self, prep(cuts,
+                                         drilldowns=drilldowns,
+                                         columns=[1])[0])
 
         # Summary
-        aggregates, q, bindings = Aggregates(self).apply(
-            q,
-            bindings,
-            aggregates
-        )
-        q = self.restrict_joins(q, bindings)
-        summary = first_result(self, q.limit(1))
+        summary = first_result(self, prep(cuts,
+                                          aggregates=aggregates)[0].limit(1))
 
         # Results
-        attributes, q, bindings = Drilldowns(self).apply(
-            q,
-            bindings,
-            drilldowns
-        )
-        q = self.restrict_joins(q, bindings)
-
+        q, bindings, attributes, aggregates, cuts = \
+            prep(cuts, drilldowns=drilldowns, aggregates=aggregates)
         page, q = Pagination(self).apply(q, page, page_size, page_max)
         ordering, q, bindings = Ordering(self).apply(q, bindings, order)
         q = self.restrict_joins(q, bindings)
@@ -115,16 +121,22 @@ class Cube(object):
         """ List all the distinct members of the given reference, filtered and
         paginated. If the reference describes a dimension, all attributes are
         returned. """
-        q = select()
-        bindings = []
-        cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
-        fields, q, bindings = \
-            Fields(self).apply(q, bindings, ref, distinct=True)
-        ordering, q, bindings = \
-            Ordering(self).apply(q, bindings, order, distinct=fields[0])
-        q = self.restrict_joins(q, bindings)
-        count = count_results(self, q)
+        def prep(cuts, ref, order, *select_args):
+            q = select(*select_args)
+            bindings = []
+            cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
+            fields, q, bindings = \
+                Fields(self).apply(q, bindings, ref, distinct=True)
+            ordering, q, bindings = \
+                Ordering(self).apply(q, bindings, order, distinct=fields[0])
+            q = self.restrict_joins(q, bindings)
+            return q, bindings, cuts, fields, ordering
 
+        # Count
+        count = count_results(self, prep(cuts, ref, order, [1])[0])
+
+        # Member list
+        q, bindings, cuts, fields, ordering = prep(cuts, ref, order)
         page, q = Pagination(self).apply(q, page, page_size)
         q = self.restrict_joins(q, bindings)
         return {
@@ -141,12 +153,19 @@ class Cube(object):
               page_size=None, page_max=None):
         """ List all facts in the cube, returning only the specified references
         if these are specified. """
-        q = select().select_from(self.fact_table)
-        bindings = []
-        cuts, q, bindings = Cuts(self).apply(q, bindings, cuts)
-        q = self.restrict_joins(q, bindings)
-        count = count_results(self, q)
 
+        def prep(cuts, *select_args):
+            q = select().select_from(self.fact_table)
+            bindings = []
+            _, q, bindings = Cuts(self).apply(q, bindings, cuts)
+            q = self.restrict_joins(q, bindings)
+            return q, bindings
+
+        # Count
+        count = count_results(self, prep(cuts)[0])
+
+        # Facts
+        q, bindings = prep(cuts)
         fields, q, bindings = Fields(self).apply(q, bindings, fields)
         ordering, q, bindings = Ordering(self).apply(q, bindings, order)
         page, q = Pagination(self).apply(q, page, page_size, page_max)
