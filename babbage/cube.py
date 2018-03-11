@@ -1,6 +1,7 @@
 from sqlalchemy import MetaData
 from sqlalchemy.schema import Table
 from sqlalchemy.sql.expression import select
+from six import string_types
 
 from babbage.model import Model
 from babbage.model.dimension import Dimension
@@ -60,7 +61,7 @@ class Cube(object):
 
     def aggregate(self, aggregates=None, drilldowns=None, cuts=None,
                   order=None, page=None, page_size=None, page_max=None):
-        """ Main aggregation function. This is used to compute a given set of
+        """Main aggregation function. This is used to compute a given set of
         aggregates, grouped by a given set of drilldown dimensions (i.e.
         dividers). The query can also be filtered and sorted. """
 
@@ -209,19 +210,30 @@ class Cube(object):
                     dimension = concept.dimension
                 dimension_table, key_col = dimension.key_attribute.bind(self)
                 if binding.table != dimension_table:
-                    raise BindingException(
-                        'Attributes must be of same table as as their'
-                        ' dimension key'
-                    )
-                try:
-                    join_column = self.fact_table.columns[
-                        dimension.join_column_name
-                    ]
-                except KeyError:
-                    raise BindingException(
-                        "Join column '%s' for %r not in fact table."
-                        % (dimension.join_column_name, dimension)
-                    )
+                    raise BindingException('Attributes must be of same table as '
+                                           'as their dimension key')
+
+                join_column_name = dimension.join_column_name
+                if isinstance(join_column_name, string_types):
+                    try:
+                        join_column = self.fact_table.columns[join_column_name]
+                    except KeyError:
+                        raise BindingException("Join column '%s' for %r not in fact table."
+                                               % (dimension.join_column_name, dimension))
+                else:
+                    if not isinstance(join_column_name, list) or len(join_column_name) != 2:
+                        raise BindingException("Join column '%s' for %r should be either a string or a 2-tuple."
+                                               % (join_column_name, dimension))
+                    try:
+                        join_column = self.fact_table.columns[join_column_name[0]]
+                    except KeyError:
+                        raise BindingException("Join column '%s' for %r not in fact table."
+                                               % (dimension.join_column_name[0], dimension))
+                    try:
+                        key_col = dimension_table.columns[join_column_name[1]]
+                    except KeyError:
+                        raise BindingException("Join column '%s' for %r not in dimension table."
+                                               % (dimension.join_column_name[1], dimension))
 
                 q = q.where(join_column == key_col)
         return q

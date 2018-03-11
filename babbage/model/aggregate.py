@@ -4,7 +4,7 @@ from babbage.model.concept import Concept
 
 
 class Aggregate(Concept):
-    """ An aggregates describes the application of an agggregate function (such
+    """ An aggregates describes the application of an aggregate function (such
     as summing, averages, counts etc.) to a measure or the primary key of the
     cube. """
 
