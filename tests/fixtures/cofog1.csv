@@ -1,0 +1,8 @@
+cofog1_change_date,cofog1_description,cofog1_label,cofog1_level,id,cofog1_taxonomy
+,"Government outlays on social protection include expenditures on services and transfers provided to individual persons and households and expenditures on services provided on a collective basis.  Expenditures on individual services and transfers are allocated to groups (10.1) through (10.7);  expenditures on collective services are assigned to groups (10.8) and (10.9).
+Collective social protection services are concerned with matters such as formulation and administration of government policy;  formulation and enforcement of legislation and standards for providing social protection;  and applied research and experimental development into social protection affairs and services.
+The social protection functions and their definitions are based on the 1996 European System of integrated Social Protection Statistics (ESSPROS) of the Statistical Office of the European Communities (Eurostat).
+In ESSPROS, social protection includes health care, but this division does not include health care.  Health care is covered by Division 07.  Hence, medical goods and services provided to persons who receive the cash benefits and benefits in kind specified in groups (10.1) through (10.7) are classified under (07.1), (07.2) or (07.3) as appropriate.",Social protection,1,10,cofog
+,,Economic affairs,1,4,cofog
+,,Housing and community amenities,1,6,cofog
+,,Public order and safety,1,3,cofog

@@ -58,9 +58,13 @@ def cra_table(sqla_engine):
 def cap_or_cur_table(sqla_engine):
     return load_csv(sqla_engine, 'cap_or_cur.csv')
 
+@pytest.fixture()
+def cofog1_table(sqla_engine):
+    return load_csv(sqla_engine, 'cofog1.csv')
+
 
 @pytest.fixture()
-def load_fixtures(cra_table, cap_or_cur_table):
+def load_fixtures(cra_table, cap_or_cur_table, cofog1_table):
     pass
 
 
@@ -88,9 +92,10 @@ def load_csv(sqla_engine, file_name, table_name=None):
     path = os.path.join(FIXTURE_PATH, file_name)
     table = None
     with open(path, 'rb') as fh:
-        for row in unicodecsv.DictReader(fh):
+        for i, row in enumerate(unicodecsv.DictReader(fh)):
             if table is None:
                 table = _create_table(sqla_engine, table_name, row.keys())
+            row['_id'] = str(i)
             stmt = table.insert(_convert_row(row))
             sqla_engine.execute(stmt)
     return table
@@ -108,7 +113,7 @@ def _create_table(engine, table_name, columns):
     id_col = sqlalchemy.schema.Column('_id', sqlalchemy.types.Integer, primary_key=True)
     table.append_column(id_col)
     for (_, name, typ) in sorted(_column_specs(columns)):
-        col = sqlalchemy.schema.Column(name, typ)
+        col = sqlalchemy.schema.Column(name, typ, primary_key=name in ('cap_or_cur', 'cofog1_name'))
         table.append_column(col)
 
     table.create(engine)

@@ -22,22 +22,22 @@
         "cofog1": {
             "attributes": {
                 "change_date": {
-                    "column": "cofog1_change_date",
+                    "column": "cofog1.cofog1_change_date",
                     "label": "Change date",
                     "type": "date"
                 },
                 "description": {
-                    "column": "cofog1_description",
+                    "column": "cofog1.cofog1_description",
                     "label": "Description",
                     "type": "string"
                 },
                 "label": {
-                    "column": "cofog1_label",
+                    "column": "cofog1.cofog1_label",
                     "label": "Label",
                     "type": "string"
                 },
                 "name": {
-                    "column": "cofog1_name",
+                    "column": "cofog1.id",
                     "label": "Name",
                     "type": "string"
                 }
@@ -45,7 +45,8 @@
             "key_attribute": "name",
             "label_attribute": "label",
             "description": "Classification Of Function Of Government, level 1",
-            "label": "COFOG level 1"
+            "label": "COFOG level 1",
+            "join_column": ["cofog1_name", "id"]
         },
         "cofog2": {
             "attributes": {
