@@ -32,6 +32,8 @@ library (this requires ``virtualenv`` to be installed):
 $ git clone https://github.com/openspending/babbage.git
 $ cd babbage
 $ make install
+$ pip install tox
+$ export BABBAGE_TEST_DB=postgresql://postgres@localhost:5432/postgres
 $ make test
 ```
 
