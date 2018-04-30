@@ -6,6 +6,7 @@ env/*
 /.idea
 *.iml
 .tox
+.pytest_cache
 .cache
 .#*
 build/

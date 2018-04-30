@@ -33,7 +33,7 @@ setup(
         'normality >= 0.2.2',
         'PyYAML >= 3.10',
         'six >= 1.7.3',
-        'flask >= 0.10.1',
+        'flask >= 0.10.1,<1.0.0',
         'jsonschema >= 2.5.1',
         'sqlalchemy >= 1.0',
         'psycopg2 >= 2.6',
