@@ -2,11 +2,15 @@ from setuptools import setup, find_packages
 
 exec(open('babbage/version.py', 'r').read())
 
+with open('README.md') as f:
+    long_description = f.read()
+
 setup(
     name='babbage',
     version=__version__,
     description="A light-weight analytical engine for OLAP processing",
-    long_description="",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
