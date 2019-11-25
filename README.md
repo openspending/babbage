@@ -37,14 +37,23 @@ $ export BABBAGE_TEST_DB=postgresql://postgres@localhost:5432/postgres
 $ make test
 ```
 
+### Docker install
+
+The development version of Babbage can be installed via docker.
+Here's how to build and run the tests:
+
+    docker-compose build
+    docker-compose run db psql -h db -U postgres -c "CREATE DATABASE babbage_test"
+    docker-compose run babbage tox
+
 ## Usage
 
-``babbage`` is used to query a set of existing database tables, using an 
+``babbage`` is used to query a set of existing database tables, using an
 abstract, logical model to query them. A sample of a logical model can be
 found in ``tests/fixtures/models/cra.json``, and a JSON schema specifying
 the model is available in ``babbage/schema/model.json``.
 
-The central unit of ``babbage`` is a ``Cube``, i.e. a [OLAP cube](https://en.wikipedia.org/wiki/OLAP_cube) that uses the provided model metadata to construct queries 
+The central unit of ``babbage`` is a ``Cube``, i.e. a [OLAP cube](https://en.wikipedia.org/wiki/OLAP_cube) that uses the provided model metadata to construct queries
 against a database table. Additionally, the application supports managing
 multiple cubes at the same time via a ``CubeManager``, which can be
 subclassed to enable application-specific ways of defining cubes and where
@@ -99,7 +108,7 @@ aggregate = cube.aggregate(aggregates='total_value.sum',
                            drilldowns='supplier|authority'
                            cut='year:2015|authority.country:GB',
                            page_size=500)
-# This translates to: 
+# This translates to:
 #   Aggregate the procurement data by summing up the 'total_value'
 #   for each unique pair of values in the 'supplier' and 'authority'
 #   dimensions, and filter for only those entries where the 'year'
@@ -123,7 +132,7 @@ assert 'authority.label' in aggregate_0
 The HTTP API for ``babbage`` is a simple Flask [Blueprint](http://flask.pocoo.org/docs/latest/blueprints/) used to expose a small set of calls that correspond to
 the cube functions listed above. To include it into an existing Flask
 application, you would need to create a ``CubeManager`` and then
-configure the API like this: 
+configure the API like this:
 
 ```python
 from flask import Flask
@@ -132,7 +141,7 @@ from babbage.manager import JSONCubeManager
 from babbage.api import configure_api
 
 app = Flask('demo')
-engine = 
+engine =
 models_directory = 'models/'
 manager = JSONCubeManager(engine, models_directory)
 blueprint = configure_api(app, manager)
@@ -149,19 +158,18 @@ relative to the given ``url_prefix``:
 
 * ``/``, returns the system status and version.
 * ``/cubes``, returns a list of the available cubes (name only).
-* ``/cubes/<name>/model``, returns full metadata for a given 
+* ``/cubes/<name>/model``, returns full metadata for a given
   cube (i.e. measures, dimensions, aggregates etc.)
 * ``/cubes/<name>/facts`` is used to return individual entries from
   the cube in a non-aggregated form. Supports filters (``cut``), a
   set of ``fields`` to return and a ``sort`` (``field_name:direction``),
   as well as ``page`` and ``page_size``.
-* ``/cubes/<name>/members`` is used to return the distinct set of 
+* ``/cubes/<name>/members`` is used to return the distinct set of
   values for a given dimension, e.g. all the suppliers mentioned in
   a procurement dataset. Supports filters (``cut``), a and a ``sort``
   (``field_name:direction``), as well as ``page`` and ``page_size``.
-* ``/cubes/<name>/aggregate`` is the main endpoint for generating 
+* ``/cubes/<name>/aggregate`` is the main endpoint for generating
   aggregate views of the data. Supports specifying the ``aggregates``
   to include, the ``drilldowns`` to aggregate by, a set of filters
   (``cut``), a and a ``sort`` (``field_name:direction``), as well
   as ``page`` and ``page_size``.
- 

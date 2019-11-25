@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  # Note for connecting: host is 'db', default user is 'postgres' no password
+  db:
+    image: postgres:11
+    environment:
+      - POSTGRES_DB=data_sync
+    volumes:
+      - postgres_babbage:/var/lib/postgresql/data/
+      # mount the current directory in case we want to restore postgres dumps
+      - .:/app
+    # Open up a local port to Postgres, not in conflict with
+    # any other Postgres you may already be running
+    ports:
+      - "6645:5432"
+
+  babbage:
+    build: .
+    depends_on: ["db"]
+    environment:
+      - PYTHONDONTWRITEBYTECODE=true
+      - PYTHONPATH=.
+      - BABBAGE_TEST_DB=postgresql://postgres@db:5432/babbage_test
+    volumes:
+      # mount current directory so that changes in files are reflected
+      # in the running environment
+      - .:/app
+    # Open up 5005, hopefully not in conflict with any other you may be running
+    ports:
+      - "5005:5000"
+
+volumes:
+  postgres_babbage:
