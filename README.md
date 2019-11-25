@@ -37,7 +37,7 @@ $ export BABBAGE_TEST_DB=postgresql://postgres@localhost:5432/postgres
 $ make test
 ```
 
-** Docker install **
+### Docker install
 
 The development version of Babbage can be installed via docker.
 Here's how to build and run the tests:
