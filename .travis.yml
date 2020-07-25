@@ -1,4 +1,5 @@
 language: python
+dist: xenial
 python:
     - "3.6"
     - "3.7"	
@@ -8,6 +9,8 @@ addons:
       packages:
       - postgresql-11
       - postgresql-client-11
+      - postgresql-server-dev-11"
+
 env:
     global:
         - BABBAGE_TEST_DB=postgresql://postgres@/babbage
