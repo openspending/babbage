@@ -21,10 +21,9 @@ env:
 install:
     - pip install tox coveralls
 before_script:
-    - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
-    - sudo service postgresql restart
+    - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
+    - sudo service postgresql restart 11
     - sleep 10
-    - netstat -an | grep LISTEN
     - psql -c 'create database babbage;' -U postgres
 script:
     - tox
