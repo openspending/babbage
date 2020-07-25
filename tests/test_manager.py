@@ -8,7 +8,7 @@ from babbage.exc import BabbageException
 class TestCubeManager(object):
     def test_list_cubes(self, fixtures_cube_manager):
         cubes = list(fixtures_cube_manager.list_cubes())
-        assert len(cubes) == 2, cubes
+        assert len(cubes) == 3, cubes
 
     def test_has_cube(self, fixtures_cube_manager):
         assert fixtures_cube_manager.has_cube('cra')

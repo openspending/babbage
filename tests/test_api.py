@@ -22,7 +22,7 @@ class TestCubeManager(object):
 
     def test_list_cubes(self, client):
         res = client.get(url_for('babbage_api.cubes'))
-        assert len(res.json['data']) == 2, res.json
+        assert len(res.json['data']) == 3, res.json
 
     def test_get_model(self, client):
         res = client.get(url_for('babbage_api.model', name='cra'))
