@@ -1,0 +1,451 @@
+  {
+    "dimensions": {
+      "CICLO": {
+        "attributes": {
+          "CICLO": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_3.CICLO",
+            "label": "Ciclo",
+            "type": "integer"
+          }
+        },
+        "join_column": [
+          "date_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "CICLO",
+        "label": "Ciclo"
+      },
+      "GPO_FUNCIONAL": {
+        "attributes": {
+          "DESC_GPO_FUNCIONAL": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_7.DESC_GPO_FUNCIONAL",
+            "label": "DESC_GPO_FUNCIONAL",
+            "type": "string"
+          },
+          "GPO_FUNCIONAL": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_7.GPO_FUNCIONAL",
+            "label": "Grupo Funcional",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "functional_classification_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "GPO_FUNCIONAL",
+        "label": "Grupo Funcional",
+        "label_attribute": "DESC_GPO_FUNCIONAL"
+      },
+      "ID_AI": {
+        "attributes": {
+          "DESC_AI": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_7.DESC_AI",
+            "label": "DESC_AI",
+            "type": "string"
+          },
+          "ID_AI": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_7.ID_AI",
+            "label": "Actividad Institucional",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "functional_classification_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_AI",
+        "label": "Actividad Institucional",
+        "label_attribute": "DESC_AI"
+      },
+      "ID_CAPITULO": {
+        "attributes": {
+          "DESC_CAPITULO": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_4.DESC_CAPITULO",
+            "label": "DESC_CAPITULO",
+            "type": "string"
+          },
+          "ID_CAPITULO": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_4.ID_CAPITULO",
+            "label": "Cap\u00edtulo",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "economic_classification_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_CAPITULO",
+        "label": "Cap\u00edtulo",
+        "label_attribute": "DESC_CAPITULO"
+      },
+      "ID_CLAVE_CARTERA": {
+        "attributes": {
+          "ID_CLAVE_CARTERA": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_2.ID_CLAVE_CARTERA",
+            "label": "Clave de Cartera",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "budget_line_id_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_CLAVE_CARTERA",
+        "label": "Clave de Cartera"
+      },
+      "ID_CONCEPTO": {
+        "attributes": {
+          "DESC_CONCEPTO": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_4.DESC_CONCEPTO",
+            "label": "DESC_CONCEPTO",
+            "type": "string"
+          },
+          "ID_CONCEPTO": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_4.ID_CONCEPTO",
+            "label": "Concepto",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "economic_classification_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_CONCEPTO",
+        "label": "Concepto",
+        "label_attribute": "DESC_CONCEPTO"
+      },
+      "ID_ENTIDAD_FEDERATIVA": {
+        "attributes": {
+          "ENTIDAD_FEDERATIVA": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_8.ENTIDAD_FEDERATIVA",
+            "label": "ENTIDAD_FEDERATIVA",
+            "type": "string"
+          },
+          "ID_ENTIDAD_FEDERATIVA": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_8.ID_ENTIDAD_FEDERATIVA",
+            "label": "Entidad Federativa",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "geo_source_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_ENTIDAD_FEDERATIVA",
+        "label": "Entidad Federativa",
+        "label_attribute": "ENTIDAD_FEDERATIVA"
+      },
+      "ID_FF": {
+        "attributes": {
+          "DESC_FF": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_6.DESC_FF",
+            "label": "DESC_FF",
+            "type": "string"
+          },
+          "ID_FF": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_6.ID_FF",
+            "label": "Fuente de Financiamiento",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "fin_source_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_FF",
+        "label": "Fuente de Financiamiento",
+        "label_attribute": "DESC_FF"
+      },
+      "ID_FUNCION": {
+        "attributes": {
+          "DESC_FUNCION": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_7.DESC_FUNCION",
+            "label": "DESC_FUNCION",
+            "type": "string"
+          },
+          "ID_FUNCION": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_7.ID_FUNCION",
+            "label": "Funci\u00f3n",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "functional_classification_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_FUNCION",
+        "label": "Funci\u00f3n",
+        "label_attribute": "DESC_FUNCION"
+      },
+      "ID_MODALIDAD": {
+        "attributes": {
+          "DESC_MODALIDAD": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_0.DESC_MODALIDAD",
+            "label": "DESC_MODALIDAD",
+            "type": "string"
+          },
+          "ID_MODALIDAD": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_0.ID_MODALIDAD",
+            "label": "Modalidad",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "activity_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_MODALIDAD",
+        "label": "Modalidad",
+        "label_attribute": "DESC_MODALIDAD"
+      },
+      "ID_PARTIDA_ESPECIFICA": {
+        "attributes": {
+          "DESC_PARTIDA_ESPECIFICA": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_4.DESC_PARTIDA_ESPECIFICA",
+            "label": "DESC_PARTIDA_ESPECIFICA",
+            "type": "string"
+          },
+          "ID_PARTIDA_ESPECIFICA": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_4.ID_PARTIDA_ESPECIFICA",
+            "label": "Partida Espec\u00edfica",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "economic_classification_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_PARTIDA_ESPECIFICA",
+        "label": "Partida Espec\u00edfica",
+        "label_attribute": "DESC_PARTIDA_ESPECIFICA"
+      },
+      "ID_PARTIDA_GENERICA": {
+        "attributes": {
+          "DESC_PARTIDA_GENERICA": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_4.DESC_PARTIDA_GENERICA",
+            "label": "DESC_PARTIDA_GENERICA",
+            "type": "string"
+          },
+          "ID_PARTIDA_GENERICA": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_4.ID_PARTIDA_GENERICA",
+            "label": "Partida Gen\u00e9rica",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "economic_classification_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_PARTIDA_GENERICA",
+        "label": "Partida Gen\u00e9rica",
+        "label_attribute": "DESC_PARTIDA_GENERICA"
+      },
+      "ID_PP": {
+        "attributes": {
+          "DESC_PP": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_0.DESC_PP",
+            "label": "DESC_PP",
+            "type": "string"
+          },
+          "ID_PP": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_0.ID_PP",
+            "label": "Programa Presupuestario",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "activity_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_PP",
+        "label": "Programa Presupuestario",
+        "label_attribute": "DESC_PP"
+      },
+      "ID_RAMO": {
+        "attributes": {
+          "DESC_RAMO": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_1.DESC_RAMO",
+            "label": "DESC_RAMO",
+            "type": "string"
+          },
+          "ID_RAMO": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_1.ID_RAMO",
+            "label": "Ramo",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "administrative_classification_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_RAMO",
+        "label": "Ramo",
+        "label_attribute": "DESC_RAMO"
+      },
+      "ID_SUBFUNCION": {
+        "attributes": {
+          "DESC_SUBFUNCION": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_7.DESC_SUBFUNCION",
+            "label": "DESC_SUBFUNCION",
+            "type": "string"
+          },
+          "ID_SUBFUNCION": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_7.ID_SUBFUNCION",
+            "label": "Subfunci\u00f3n",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "functional_classification_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_SUBFUNCION",
+        "label": "Subfunci\u00f3n",
+        "label_attribute": "DESC_SUBFUNCION"
+      },
+      "ID_TIPOGASTO": {
+        "attributes": {
+          "DESC_TIPOGASTO": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_5.DESC_TIPOGASTO",
+            "label": "DESC_TIPOGASTO",
+            "type": "string"
+          },
+          "ID_TIPOGASTO": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_5.ID_TIPOGASTO",
+            "label": "Tipo de Gasto",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "expenditure_type_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_TIPOGASTO",
+        "label": "Tipo de Gasto",
+        "label_attribute": "DESC_TIPOGASTO"
+      },
+      "ID_UR": {
+        "attributes": {
+          "DESC_UR": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_1.DESC_UR",
+            "label": "DESC_UR",
+            "type": "string"
+          },
+          "ID_UR": {
+            "column": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd_1.ID_UR",
+            "label": "Unidad Responsable",
+            "type": "string"
+          }
+        },
+        "join_column": [
+          "administrative_classification_id",
+          "_fdp__id_"
+        ],
+        "key_attribute": "ID_UR",
+        "label": "Unidad Responsable",
+        "label_attribute": "DESC_UR"
+      }
+    },
+    "fact_table": "667df60aa07c34260eae9b55b27787128e5d49d57370f3fd",
+    "hierarchies": {
+      "activity": {
+        "label": "activity",
+        "levels": [
+          "ID_MODALIDAD",
+          "ID_PP"
+        ]
+      },
+      "administrative_classification": {
+        "label": "administrative_classification",
+        "levels": [
+          "ID_RAMO",
+          "ID_UR"
+        ]
+      },
+      "budget_line_id": {
+        "label": "budget_line_id",
+        "levels": [
+          "ID_CLAVE_CARTERA"
+        ]
+      },
+      "date": {
+        "label": "date",
+        "levels": [
+          "CICLO"
+        ]
+      },
+      "economic_classification": {
+        "label": "economic_classification",
+        "levels": [
+          "ID_CAPITULO",
+          "ID_CONCEPTO",
+          "ID_PARTIDA_GENERICA",
+          "ID_PARTIDA_ESPECIFICA"
+        ]
+      },
+      "expenditure_type": {
+        "label": "expenditure_type",
+        "levels": [
+          "ID_TIPOGASTO"
+        ]
+      },
+      "fin_source": {
+        "label": "fin_source",
+        "levels": [
+          "ID_FF"
+        ]
+      },
+      "functional_classification": {
+        "label": "functional_classification",
+        "levels": [
+          "GPO_FUNCIONAL",
+          "ID_FUNCION",
+          "ID_SUBFUNCION",
+          "ID_AI"
+        ]
+      },
+      "geo_source": {
+        "label": "geo_source",
+        "levels": [
+          "ID_ENTIDAD_FEDERATIVA"
+        ]
+      }
+    },
+    "measures": {
+      "MONTO_ADEFAS": {
+        "column": "MONTO_ADEFAS",
+        "label": "ADEFAS",
+        "type": "number"
+      },
+      "MONTO_APROBADO": {
+        "column": "MONTO_APROBADO",
+        "label": "Aprobado",
+        "type": "number"
+      },
+      "MONTO_DEVENGADO": {
+        "column": "MONTO_DEVENGADO",
+        "label": "Devengado",
+        "type": "number"
+      },
+      "MONTO_EJERCICIO": {
+        "column": "MONTO_EJERCICIO",
+        "label": "Ejercicio",
+        "type": "number"
+      },
+      "MONTO_EJERCIDO": {
+        "column": "MONTO_EJERCIDO",
+        "label": "Ejercido",
+        "type": "number"
+      },
+      "MONTO_MODIFICADO": {
+        "column": "MONTO_MODIFICADO",
+        "label": "Modificado",
+        "type": "number"
+      },
+      "MONTO_PAGADO": {
+        "column": "MONTO_PAGADO",
+        "label": "Pagado",
+        "type": "number"
+      }
+    }
+  }

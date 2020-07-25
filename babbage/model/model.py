@@ -25,8 +25,8 @@ class Model(object):
     def dimensions(self):
         hierarchy_map = {}
         for h in self.hierarchies:
-            for l in h.levels:
-                hierarchy_map[l] = h.name
+            for lvl in h.levels:
+                hierarchy_map[lvl] = h.name
         for name, data in self.spec.get('dimensions', {}).items():
             yield Dimension(self, name, data, hierarchy_map.get(name))
 
