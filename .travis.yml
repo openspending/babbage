@@ -4,26 +4,17 @@ python:
     - "3.6"
     - "3.7"	
 addons:
-    postgresql: "11"
-    apt:
-      packages:
-      - postgresql-11
-      - postgresql-client-11
-      - postgresql-server-dev-11
+    postgresql: "9.6"
 
 env:
     global:
         - BABBAGE_TEST_DB=postgresql://postgres@/babbage
-        - PGPORT=5433
     matrix:
         - TOXENV="py${PYTHON_VERSION//./}"
 
 install:
     - pip install tox coveralls
 before_script:
-    - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
-    - sudo service postgresql restart 11
-    - sleep 10
     - psql -c 'create database babbage;' -U postgres
 script:
     - tox
