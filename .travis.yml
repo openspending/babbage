@@ -20,6 +20,8 @@ env:
 install:
     - pip install tox coveralls
 before_script:
+    - sleep 60
+    - netstat -an | grep LISTEN
     - psql -c 'create database babbage;' -U postgres
 script:
     - tox
