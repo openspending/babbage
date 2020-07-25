@@ -3,7 +3,11 @@ python:
     - "3.6"
     - "3.7"	
 addons:
-    postgresql: "11.5"
+    postgresql: "11"
+    apt:
+      packages:
+      - postgresql-11
+      - postgresql-client-11
 env:
     global:
         - BABBAGE_TEST_DB=postgresql://postgres@/babbage
