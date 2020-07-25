@@ -42,7 +42,7 @@ class Cube(object):
     @property
     def fact_pk(self):
         """ Try to determine the primary key of the fact table for use in
-        fact table counting. 
+        fact table counting.
         If more than one column exists, return the first column of the pk.
         """
         keys = [c for c in self.fact_table.columns if c.primary_key]
