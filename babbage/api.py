@@ -2,6 +2,8 @@
 # TODO: consider making this it's own Python package?
 from datetime import date
 from decimal import Decimal
+import csv
+import io
 
 from werkzeug.exceptions import NotFound
 from flask import Blueprint, Response, request, current_app, json, url_for
@@ -66,19 +68,24 @@ def jsonify(obj, status=200, headers=None):
 
 def create_csv_response(rows):
     def _generator():
+        output = io.StringIO()
+        csvwriter = csv.writer(output)
         convert_to_str = lambda value: str(value) if value is not None else '' # noqa
         columns = []
 
         for index, row in enumerate(rows):
             if index == 0:
                 columns = sorted(row.keys())
-                yield ','.join(columns) + '\n'
-
+                csvwriter.writerow(columns)
             data = [
                 convert_to_str(row.get(column))
                 for column in columns
             ]
-            yield ','.join(data) + '\n'
+            csvwriter.writerow(data)
+            output.seek(0)
+            yield output.read()
+            output.truncate(0)
+            output.seek(0)
 
     return Response(
         _generator(),
@@ -170,6 +177,9 @@ def facts(name):
                         page=request.args.get('page'),
                         page_size=request.args.get('pagesize'))
     result['status'] = 'ok'
+
+    if request.args.get('format', '').lower() == 'csv':
+        return create_csv_response(result['data'])
     return jsonify(result)
 
 
@@ -183,4 +193,7 @@ def members(name, ref):
                           page=request.args.get('page'),
                           page_size=request.args.get('pagesize'))
     result['status'] = 'ok'
+
+    if request.args.get('format', '').lower() == 'csv':
+        return create_csv_response(result['data'])
     return jsonify(result)
