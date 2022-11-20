@@ -186,4 +186,7 @@ def members(name, ref):
                           page=request.args.get('page'),
                           page_size=request.args.get('pagesize'))
     result['status'] = 'ok'
+
+    if request.args.get('format', '').lower() == 'csv':
+        return create_csv_response(result['data'])
     return jsonify(result)
